@@ -44,6 +44,13 @@ dependencies {
 	compile('org.apache.tomcat.embed:tomcat-embed-jasper')
 	compile('javax.servlet:jstl:1.2')
 	compile('org.fusesource.jansi:jansi:1.16')
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper dto <-> entity
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.0'
+
+    
+	
 }
 
 test {

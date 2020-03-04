@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BoardEntity {
+public class BoardEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,4 +27,6 @@ public class BoardEntity {
     private String boardContent;
     @Column(updatable = false)
     private String boardRegDt;
+    @Column
+    private String textHtml;
 }
