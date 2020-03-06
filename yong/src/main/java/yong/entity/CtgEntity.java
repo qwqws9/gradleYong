@@ -29,6 +29,4 @@ public class CtgEntity extends BaseEntity {
     private String dispYn;
     @Column
     private String ctgName;
-    @Column
-    private String ctgPath;
 }

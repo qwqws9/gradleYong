@@ -30,17 +30,17 @@ CREATE TABLE ctg_mst (
 	ctg_mst_seq INT(100) PRIMARY KEY AUTO_INCREMENT COMMENT '카테고리 마스터 번호',
 	disp_no VARCHAR(100) NOT NULL COMMENT '카테고리 전시 순서',
 	disp_yn VARCHAR(100) NOT NULL COMMENT '카테고리 전시 여부',
-	ctg_mst_name VARCHAR(1000) NOT NULL COMMENT '카테고리 명'
+	ctg_name VARCHAR(1000) NOT NULL COMMENT '카테고리 명'
 );
 
 CREATE TABLE ctg (
 	ctg_seq INT(100) NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '카테고리 번호',
-	ctg_mst_seq INT(100) COMMENT '카테고리 마스터 번호', 
+	ctg_mst_seq INT(100) NOT NULL COMMENT '카테고리 마스터 번호', 
 	disp_no VARCHAR(100) NOT NULL COMMENT '카테고리 전시 순서',
 	disp_yn VARCHAR(100) NOT NULL COMMENT '카테고리 전시 여부',
 	ctg_name VARCHAR(1000) NOT NULL COMMENT '카테고리 명',
-	ctg_path VARCHAR(1000) NOT NULL COMMENT '카테고리 경로',
 	FOREIGN KEY(ctg_mst_seq) REFERENCES ctg_mst(ctg_mst_seq)
 );
 
-
+ALTER TABLE ctg CONVERT TO CHARSET utf8;
+ALTER TABLE ctg_mst CONVERT TO CHARSET utf8;

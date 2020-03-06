@@ -12,7 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "CTG")
+@Table(name = "CTG_MST")
 @Getter
 @Setter
 @ToString
@@ -26,5 +26,5 @@ public class CtgMstEntity extends BaseEntity {
     @Column
     private String dispYn;
     @Column
-    private String ctgMstName;
+    private String ctgName;
 }

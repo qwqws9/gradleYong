@@ -11,15 +11,21 @@ import lombok.extern.slf4j.Slf4j;
 import yong.common.HashUtil;
 import yong.common.Result;
 import yong.dto.BoardDto;
+import yong.dto.CtgMstDto;
 import yong.dto.UserDto;
 import yong.entity.BoardEntity;
+import yong.entity.CtgEntity;
+import yong.entity.CtgMstEntity;
 import yong.entity.FileEntity;
 import yong.entity.UserEntity;
 import yong.exception.BadRequestException;
 import yong.jpa.BoardJpa;
+import yong.jpa.CtgJpa;
+import yong.jpa.CtgMstJpa;
 import yong.jpa.FilesJpa;
 import yong.jpa.UserJpa;
 import yong.mapper.BoardMapper;
+import yong.mapper.CtgMapper;
 
 @Service
 @Slf4j
@@ -34,104 +40,61 @@ public class CtgService {
     @Autowired
     private BoardMapper boardMapper;
     
-    public List<BoardDto> boardList() {
-        
-        List<BoardDto> list = this.boardMapper.selectBoardList();
-        
-        for(BoardDto board : list) {
-            List<FileEntity> fileList = this.filesJpa.findByBoardSeqAndDelYnOrderByFileSeq(board.getBoardSeq(), "N");
-            if (fileList != null && fileList.size() != 0) {
-                board.setFilePath(fileList.get(0).getFilePath());
-            }
-            board.setTextHtml(board.getTextHtml().replaceAll("&nbsp;", ""));
-        }
-        
-        log.debug(" board ==> {}", list);
-        
-        return list;
-    }
+    @Autowired
+    private CtgJpa ctgJpa;
     
-    public BoardDto boardSelect(String boardSeq) {
-        
-        BoardEntity board = this.boardJpa.findById(Long.valueOf(boardSeq)).orElse(null);
-        if (board == null) { throw new BadRequestException("존재하지 않는 게시물입니다."); }
-        
-        return board.toDto(BoardDto.class);
-    }
+    @Autowired
+    private CtgMstJpa ctgMstJpa;
     
-    public void boardSave(BoardDto board) {
-        if (StringUtils.isEmpty(board.getBoardTitle()) || StringUtils.isEmpty(board.getBoardContent())) {
-            throw new BadRequestException("폼 데이터 확인 후 재등록");
-        }
+    @Autowired
+    private CtgMapper ctgMapper;
+    
+    public List<CtgMstDto> ctgList(String ctgAll) {
+        List<CtgMstDto> ctgMstList = this.ctgMapper.selectCtgMstList(ctgAll);
         
-        log.debug("textHtml ====> {}",board.getTextHtml());
-        
-        
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        board.setBoardRegDt(format.format(System.currentTimeMillis()));
-        BoardEntity entity = this.boardJpa.save(board.toEntity(BoardEntity.class));
-        
-        if(!StringUtils.isEmpty(board.getTempSeq())) {
-            List<FileEntity> list = this.filesJpa.findByBoardSeq(Long.valueOf(board.getTempSeq()));
-            if (list != null && list.size() != 0) {
-                for (FileEntity f : list) {
-                    f.setDelYn("N");
-                    f.setBoardSeq(entity.getBoardSeq());
+        if (ctgMstList != null && ctgMstList.size() != 0) {
+            for (CtgMstDto c : ctgMstList) {
+                if (StringUtils.isNotEmpty(ctgAll)) {
+                    c.setCtgAll(ctgAll);
                 }
+                c.setCtgDtoList(this.ctgMapper.selectCtgList(c));
             }
         }
+        
+        return ctgMstList;
     }
     
-    public void boardUpdate(BoardDto board) {
-        if (StringUtils.isEmpty(board.getBoardTitle()) || StringUtils.isEmpty(board.getBoardContent())) {
-            throw new BadRequestException("폼 데이터 확인 후 재등록");
-        }
+    public Result ctgMstSave(CtgMstDto ctgMst) {
         
-        BoardEntity entity = this.boardJpa.findById(board.getBoardSeq()).orElse(null);
-        if (entity == null) { throw new BadRequestException("존재하지 않는 게시물입니다."); }
-        
-        entity.setBoardTitle(board.getBoardTitle());
-        entity.setBoardContent(board.getBoardContent());
-        entity.setTextHtml(board.getTextHtml());
-        
-        // 기존에 있던 이미지 파일 정리
-        List<FileEntity> oldFileList = this.filesJpa.findByBoardSeq(Long.valueOf(board.getTempSeq()));
-        for (FileEntity f : oldFileList) {
-            if (board.getBoardTitle().indexOf(f.getFilePath()) == -1) {
-                f.setDelYn("Y");
+        if(!StringUtils.isEmpty(ctgMst.getLoc())) {
+            switch (ctgMst.getLoc()) {
+                case "update":
+                    if (ctgMst.getCtgMstSeq() != null && ctgMst.getCtgMstSeq() != 0 && StringUtils.isEmpty(ctgMst.getCtgSeq())) {
+                        CtgMstEntity mstEntity = this.ctgMstJpa.findById(ctgMst.getCtgMstSeq()).orElse(null);
+                        if (mstEntity == null) { throw new BadRequestException("수정할 수 없는 대상입니다."); }
+                        mstEntity.setCtgName(ctgMst.getCtgName());
+                        mstEntity.setDispNo(ctgMst.getDispNo());
+                        mstEntity.setDispYn(ctgMst.getDispYn());
+                    } else {
+                        CtgEntity ctgEntity = this.ctgJpa.findById(Long.valueOf(ctgMst.getCtgSeq())).orElse(null);
+                        if (ctgEntity == null) { throw new BadRequestException("수정할 수 없는 대상입니다."); }
+                        ctgEntity.setCtgName(ctgMst.getCtgName());
+                        ctgEntity.setDispNo(ctgMst.getDispNo());
+                        ctgEntity.setDispYn(ctgMst.getDispYn());
+                    }
+                    break;
+                case "parent" :
+                    log.debug("마스터 생성?");
+                    this.ctgMstJpa.save(ctgMst.toEntity(CtgMstEntity.class));
+                    break;
+                case "child" :
+                    this.ctgJpa.save(ctgMst.toEntity(CtgEntity.class));
+                    break;
+                default:
+                    return new Result(100, "생성 정보가 없습니다.");
             }
         }
-
-        // 새로 추가된 이미지 파일
-        if(!StringUtils.isEmpty(board.getTempSeq())) {
-            List<FileEntity> list = this.filesJpa.findByBoardSeq(Long.valueOf(board.getTempSeq()));
-            if (list != null && list.size() != 0) {
-                for (FileEntity f : list) {
-                    f.setDelYn("N");
-                    f.setBoardSeq(entity.getBoardSeq());
-                }
-            }
-        }
+        
+        return new Result();
     }
-
-    
-    /**
-     * 
-     * 유저 조회
-     *
-     * @since 2020. 3. 2.
-     * @author yong
-     *
-     * @param user
-     * @return
-     */
-//    public UserDto getUser(Long userSeq) {
-//        UserEntity entity = this.userJpa.findById(userSeq).orElse(null);
-//        if (entity == null) { throw new BadRequestException("존재하지 않는 회원입니다."); }
-//        
-//        UserDto user = entity.toDto(UserDto.class);
-//        user.setUserPwd("");
-//        
-//        return user;
-//    }
 }

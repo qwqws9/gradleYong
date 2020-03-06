@@ -30,7 +30,7 @@
                       <ul class="dropdown-menu" role="menu" aria-labelledby="adminDropMenu">
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/board/boardReg">게시물 작성</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/board/boardList">목록</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/ctg/ctgList">카테고리 관리</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/ctg/ctgInput">카테고리 관리</a></li>
                         <li role="presentation" class="divider"></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                       </ul>

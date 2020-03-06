@@ -2,8 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="yong.mapper.CtgMapper">
-	<select id="selectBoardList" resultType="BoardDto">
+	<select id="selectCtgMstList" resultType="CtgMstDto" parameterType="string">
 		SELECT *
-		  FROM BOARD
+		  FROM ctg_mst cm
+		<if test="ctgAll != null and ctgAll != '' ">
+			WHERE cm.disp_yn = #{ctgAll}
+		</if>
+		ORDER BY cm.disp_no 
 	</select>
+	
+	<select id="selectCtgList" resultType="CtgDto" parameterType="CtgMstDto">
+		SELECT *
+		  FROM ctg c
+		WHERE c.ctg_mst_seq = #{ctgMstSeq}
+		<if test="ctgAll != null and ctgAll != '' ">
+			AND c.disp_yn = #{ctgAll}
+		</if>
+		ORDER BY c.disp_no 
+	</select>
+	
+	
 </mapper>

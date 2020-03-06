@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import yong.common.Result;
 import yong.service.BoardService;
 import yong.service.CommonService;
+import yong.service.CtgService;
 
 @Controller
 @Slf4j
@@ -23,12 +24,16 @@ public class CommonController {
     @Autowired
     private BoardService boardService;
     
+    @Autowired
+    private CtgService ctgService;
+    
     @RequestMapping("/")
     public ModelAndView index() {
         // 나중에 사이드 메뉴 목록 가져오는 메서드 추가하기
         ModelAndView mv = new ModelAndView();
         
         mv.addObject("list", this.boardService.boardList());
+        mv.addObject("ctgList", this.ctgService.ctgList("Y"));
         mv.setViewName("/index");
 
         return mv;
