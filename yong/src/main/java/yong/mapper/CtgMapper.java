@@ -11,6 +11,6 @@ import yong.dto.CtgMstDto;
 public interface CtgMapper {
 
     public List<CtgMstDto> selectCtgMstList(String dispYn);
-    
+
     public List<CtgDto> selectCtgList(CtgMstDto ctgMst);
 }

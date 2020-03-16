@@ -9,5 +9,7 @@ import yong.dto.BoardDto;
 @Mapper
 public interface BoardMapper {
 
-    public List<BoardDto> selectBoardList();
+    public List<BoardDto> selectBoardList(BoardDto param);
+
+    public int selectBoardListCount();
 }

@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <title>Bootstrap, from Twitter</title>
     <!-- bootstrap CDN , 반응형 CSS style -->
     <jsp:include page="/WEB-INF/layout/header.jsp"></jsp:include>
@@ -17,30 +17,30 @@
     <input type="hidden" id="mode" value="${mode }"/>
     
     <div class="container-fluid">
-      <div class="row-fluid">
-          <!-- 왼쪽 사이드 메뉴바 -->
-          <div class="float_sidebar" id="ctgList"></div>
+        <div class="row-fluid">
+            <!-- 왼쪽 사이드 메뉴바 -->
+            <div class="float_sidebar" id="ctgList"></div>
           
-        <div class="span9">
-        	<div class="span12">
-        		<input type="hidden" id="boardSeq" value="${board.boardSeq }"/>
-			    <h3><c:out value="${board.boardTitle }"/></h3>
-			    <small>
-			    	<fmt:parseDate value="${board.boardRegDt}" var="boardRegDt" pattern="yyyyMMddHHmmss"/>
-                    <fmt:formatDate value="${boardRegDt}" pattern="yyyy-MM-dd HH:mm:ss"/>
-			    </small>
-			    <hr>
-			    ${board.boardContent }
-			</div>
-			<c:if test="${userInfo.userRole eq 'admin' }">
-			<div class="control-group">
-			    <div class="controls">
-			      <button type="button" class="btn" onclick="location.href='/board/boardMod?boardSeq=${board.boardSeq}'">수정</button>
-			      <button type="button" class="btn" onclick="boardDelete()">삭제</button>
-			    </div>
-			  </div>
-			  </c:if>
-        </div><!--/span-->
+            <div class="span9">
+                <div class="span12">
+                    <input type="hidden" id="boardSeq" value="${board.boardSeq }"/>
+                    <h3><c:out value="${board.boardTitle }"/></h3>
+                    <small>
+                        <fmt:parseDate value="${board.boardRegDt}" var="boardRegDt" pattern="yyyyMMddHHmmss"/>
+                        <fmt:formatDate value="${boardRegDt}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                    </small>
+                <hr>
+                    ${board.boardContent }
+                </div>
+                <c:if test="${userInfo.userRole eq 'admin' }">
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="button" class="btn" onclick="location.href='/board/boardMod?boardSeq=${board.boardSeq}'">수정</button>
+                            <button type="button" class="btn" onclick="boardDelete()">삭제</button>
+                        </div>
+                    </div>
+                </c:if>
+            </div><!--/span-->
       </div><!--/row-->
 
       <hr>
@@ -56,47 +56,47 @@
 <script>
 
 function parentFn(imgPathList) {
-	console.log(imgPathList);
-	var imgTag = '<img src="/resources/img/upload/';
-	var html;
-	$.each(imgPathList, function(index, item) {
-		html = [];
-		html.push(imgTag);
-		html.push(item);
-		html.push('"/>');
-		console.log(html);
-	    oEditors.getById["boardContent"].exec("PASTE_HTML", [html.join('')]);
-	})
+    console.log(imgPathList);
+    var imgTag = '<img src="/resources/img/upload/';
+    var html;
+    $.each(imgPathList, function(index, item) {
+        html = [];
+        html.push(imgTag);
+        html.push(item);
+        html.push('"/>');
+        console.log(html);
+        oEditors.getById["boardContent"].exec("PASTE_HTML", [html.join('')]);
+    })
 }
 
 function callPop() {
-	var tempSeq = $('#tempSeq').val();
+    var tempSeq = $('#tempSeq').val();
     window.open('/common/popup/uploadFilePopup?tempSeq='+tempSeq, 'uploader', 'width=500, height=400');
 }
 
 function boardWrite() {
-	let title = $('#boardTitle').val();
-	
-	
-	if (title == "") {
-		$('#boardTitle').focus();
-		return false;
-	}
-	
-	oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
-	
-	var data = $('#boardContent').val();
-	var text = data.replace(/[<][^>]*[>]/gi, "");
-	$('#textHtml').val(text);
-	
-	var action = $('#mode').val() == 'update' ? "/board/boardUpdate" : "/board/boardSave"
-	$('#boardForm').attr('action', action).submit();
+    let title = $('#boardTitle').val();
+    
+    
+    if (title == "") {
+        $('#boardTitle').focus();
+        return false;
+    }
+    
+    oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
+    
+    var data = $('#boardContent').val();
+    var text = data.replace(/[<][^>]*[>]/gi, "");
+    $('#textHtml').val(text);
+    
+    var action = $('#mode').val() == 'update' ? "/board/boardUpdate" : "/board/boardSave"
+    $('#boardForm').attr('action', action).submit();
 }
 
 $(function() {
     $('#ctgList').load("/layout/left", function() {
-		
-	});
+        
+    });
 });
 </script>
 

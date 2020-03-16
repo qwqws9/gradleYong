@@ -15,7 +15,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(BadRequestException.class)
     public ModelAndView badRequestHandler(HttpServletRequest request, BadRequestException exception) {
         
-        log.info("장애발생시 1");
+        log.info("장애발생 BadReqeustException(커스텀 예외)");
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/error/error_default");
         mv.addObject("message", exception.getMessage());
@@ -28,7 +28,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ModelAndView defaultExceptionHandler(HttpServletRequest request, Exception exception) {
         
-        log.info("장애발생시 2");
+        log.info("장애발생 Exception(커스텀 거치지않는 예외 ******* 추가)");
         ModelAndView mv = new ModelAndView("/error/error_default");
         mv.addObject("exception",exception);
         

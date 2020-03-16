@@ -23,4 +23,11 @@ $(function() {
         }
         $layer.animate({"top":yPosition }, {duration:speed, easing:easing, queue:false});
     });
+    
+    // 검색 키워드 이벤트
+    $(document).on('keyup','#boardSearchKeyword', function(event) {
+    	if ($('#boardSearchKeyword').val().trim() != '' && event.keyCode == 13) {
+    		// 검색 로직 추가하기 !!!!!!!!!!!!
+    	}
+    })
 });

@@ -21,16 +21,22 @@ public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userSeq;
+
     @Column
     private String userId;
+
     @Column
     private String userPwd;
+
     @Column
     private String userRole;
+
     @Column
     private String userNick;
+
     @Column
     private String userStatCd;
+
     @Column(updatable = false)
     private String regDt;
 }

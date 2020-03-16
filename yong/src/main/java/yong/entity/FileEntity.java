@@ -21,16 +21,22 @@ public class FileEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long fileSeq;
+
     @Column
     private int masterSeq;
+
     @Column
     private Long boardSeq;
+
     @Column
     private String originalFileName;
+
     @Column
     private String filePath;
+
     @Column
     private Long fileSize;
+
     @Column
     private String delYn;
 }

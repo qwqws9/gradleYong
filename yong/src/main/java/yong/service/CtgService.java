@@ -3,14 +3,17 @@ package yong.service;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import yong.common.Const;
 import yong.common.HashUtil;
 import yong.common.Result;
 import yong.dto.BoardDto;
+import yong.dto.CtgDto;
 import yong.dto.CtgMstDto;
 import yong.dto.UserDto;
 import yong.entity.BoardEntity;
@@ -63,6 +66,38 @@ public class CtgService {
         
         return ctgMstList;
     }
+    
+    public List<CtgMstDto> selectCtgMstList() {
+        return this.ctgMapper.selectCtgMstList(Const.N);
+    }
+    
+    public List<CtgDto> selectCtgList(CtgMstDto ctgMst) {
+        ctgMst.setCtgAll(Const.N);
+        return this.ctgMapper.selectCtgList(ctgMst);
+
+    }
+    
+//    public Result selectCtgMstList() {
+//        List<CtgMstDto> ctgMstList = this.ctgMapper.selectCtgMstList(Const.N);
+//
+//        if (CollectionUtils.isEmpty(ctgMstList)) {
+//            return new Result(100); 
+//        }
+//
+//        return new Result(ctgMstList);
+//    }
+//    
+//    public Result selectCtgList(CtgMstDto ctgMst) {
+//        ctgMst.setCtgAll(Const.N);
+//        List<CtgDto> ctgList = this.ctgMapper.selectCtgList(ctgMst);
+//
+//        if (CollectionUtils.isEmpty(ctgList)) {
+//            return new Result(100);
+//        }
+//
+//        return new Result(ctgList);
+//    }
+    
     
     public Result ctgMstSave(CtgMstDto ctgMst) {
         

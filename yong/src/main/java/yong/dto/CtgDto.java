@@ -16,5 +16,7 @@ public class CtgDto extends BaseDto {
     private String ctgName;
     private String ctgPath;
     
+    private int ctgCount;
+    
     
 }

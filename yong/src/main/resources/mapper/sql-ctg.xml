@@ -2,24 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="yong.mapper.CtgMapper">
-	<select id="selectCtgMstList" resultType="CtgMstDto" parameterType="string">
-		SELECT *
-		  FROM ctg_mst cm
-		<if test="ctgAll != null and ctgAll != '' ">
-			WHERE cm.disp_yn = #{ctgAll}
-		</if>
-		ORDER BY cm.disp_no 
-	</select>
-	
-	<select id="selectCtgList" resultType="CtgDto" parameterType="CtgMstDto">
-		SELECT *
-		  FROM ctg c
-		WHERE c.ctg_mst_seq = #{ctgMstSeq}
-		<if test="ctgAll != null and ctgAll != '' ">
-			AND c.disp_yn = #{ctgAll}
-		</if>
-		ORDER BY c.disp_no 
-	</select>
-	
-	
+    <select id="selectCtgMstList" resultType="CtgMstDto" parameterType="string">
+        SELECT *
+          FROM ctg_mst cm
+	        <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(ctgAll) and ctgAll == "N"'>
+	            WHERE cm.disp_yn = 'Y'
+	        </if>
+         ORDER BY cm.disp_no 
+    </select>
+    
+    <select id="selectCtgList" resultType="CtgDto" parameterType="CtgMstDto">
+        SELECT COUNT(b.board_seq) ctg_count, c.*
+          FROM ctg c LEFT JOIN board b ON c.ctg_seq = b.ctg_seq
+         WHERE c.ctg_mst_seq = #{ctgMstSeq}
+	        <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(ctgAll) and ctgAll == "N"'>
+	            AND c.disp_yn = 'Y'
+	        </if>
+         GROUP BY c.ctg_seq
+         ORDER BY c.disp_no
+    </select>
 </mapper>

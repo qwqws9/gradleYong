@@ -15,13 +15,23 @@ import yong.dto.UserDto;
 import yong.exception.BadRequestException;
 import yong.service.UserService;
 
+/**
+ * 
+ * 클래스명: <code>UserController</code><br/><br/>
+ *
+ * 회원관리 컨트롤러
+ *
+ * @since 2020. 3. 16.
+ * @author yong
+ *
+ */
 @Controller
 @Slf4j
 public class UserController extends BaseController {
-    
+
     @Autowired
     private UserService userService;
-    
+
     /**
      * 
      * 유저 등록 / 수정폼 이동
@@ -33,12 +43,13 @@ public class UserController extends BaseController {
      */
     @RequestMapping({"/user/userReg", "/user/userMod"})
     public ModelAndView userForm(String userSeq) {
-        
+
         ModelAndView mv = new ModelAndView();
-        
+
+        // 회원 등록
         if (super.getRequestURI().endsWith("Reg")) {
             mv.addObject("mode", "reg");
-        } else {
+        } else { // 수정
             HttpSession session = super.getSession();
             UserDto user = (UserDto)session.getAttribute("userInfo");
             if (user == null) { throw new BadRequestException("세션이 만료되었습니다."); }
@@ -47,12 +58,12 @@ public class UserController extends BaseController {
             log.info("user =>>> {}", user);
             mv.addObject("mode", "update");
         }
-        
+
         mv.setViewName("/user/userForm");
-        
+
         return mv;
     }
-    
+
     /**
      * 
      * 유저 등록 / 수정
@@ -65,18 +76,19 @@ public class UserController extends BaseController {
     public ModelAndView userSave(UserDto user) {
         ModelAndView mv = new ModelAndView();
         log.debug("user = > {}" , user);
+
+        // 회원 등록
         if (super.getRequestURI().endsWith("Save")) {
             this.userService.userSave(user);
             mv.setViewName("/user/loginForm");
-        } else {
+        } else { // 수정
             this.userService.userMod(user);
             mv.setViewName("/index");
         }
-        
+
         return mv;
     }
-    
-    
+
     /**
      * 
      * 유저 목록 조회
@@ -89,7 +101,7 @@ public class UserController extends BaseController {
     public void userList() {
         
     }
-    
+
     /**
      * 
      * 회원가입 폼 이동
@@ -103,8 +115,7 @@ public class UserController extends BaseController {
     public String userLoginForm() {
         return "/user/loginForm";
     }
-    
-    
+
     /**
      * 
      * 로그인 처리
@@ -121,18 +132,17 @@ public class UserController extends BaseController {
         if (user == null || StringUtils.isEmpty(user.getUserId()) || StringUtils.isEmpty(user.getUserPwd())) {
             return new Result(100, "아이디, 패스워드 오류");
         }
-        
+
         log.debug("user => {} ", user);
-        
+
         Result result = userService.login(user);
-        
+
+        // 로그인 성공시 세션에 데이터 저장
         if (result.getResultCode() == 1) {
             HttpSession session = super.getSession();
             session.setAttribute("userInfo", result.getInfo("data"));
         }
-        
+
         return result;
     }
-    
-
 }

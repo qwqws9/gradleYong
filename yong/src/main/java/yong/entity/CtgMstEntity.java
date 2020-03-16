@@ -21,10 +21,13 @@ public class CtgMstEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long ctgMstSeq;
+
     @Column
     private String dispNo;
+
     @Column
     private String dispYn;
+
     @Column
     private String ctgName;
 }

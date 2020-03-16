@@ -16,7 +16,7 @@
     <jsp:include page="/WEB-INF/layout/top.jsp"></jsp:include>
 
     <div class="container-fluid">
-      <div class="row-fluid">
+        <div class="row-fluid">
           <!-- 왼쪽 사이드 메뉴바 -->
           <jsp:include page="/WEB-INF/layout/left.jsp"></jsp:include>
           

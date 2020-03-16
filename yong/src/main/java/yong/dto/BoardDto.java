@@ -16,4 +16,13 @@ public class BoardDto extends BaseDto {
     private String tempSeq;
     private String filePath;
     private String textHtml;
+    
+    private Long ctgMstSeq;
+    private Long ctgSeq;
+    
+    private String ctgMstName;
+    private String ctgName;
+    
+    private int startNum;
+    private int pageCount;
 }
