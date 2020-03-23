@@ -15,6 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
+import yong.dto.UserDto;
 
 @Slf4j
 public class BaseController {
@@ -130,5 +131,9 @@ public class BaseController {
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
         this.getResponse().addCookie(cookie);
+    }
+
+    public UserDto getCurrUser() {
+        return (UserDto) this.getSession("userInfo");
     }
 }

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import yong.annotation.AccessUser;
 import yong.common.Const;
 import yong.common.Result;
 import yong.dto.BoardDto;
@@ -85,6 +86,7 @@ public class CtgController extends BaseController {
      *
      * @return
      */
+    
     @RequestMapping("/ctg/ctgList")
     public ModelAndView ctgList() {
         ModelAndView mv = new ModelAndView();
@@ -124,6 +126,7 @@ public class CtgController extends BaseController {
      *
      * @return
      */
+    @AccessUser
     @RequestMapping("/ctg/ctgInput")
     public ModelAndView ctgInput() {
         ModelAndView mv = new ModelAndView();

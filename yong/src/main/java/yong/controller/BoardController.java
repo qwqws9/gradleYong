@@ -3,11 +3,13 @@ package yong.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
+import yong.annotation.AccessUser;
 import yong.common.Const;
 import yong.dto.BoardDto;
 import yong.dto.UserDto;
@@ -49,6 +51,7 @@ public class BoardController extends BaseController {
      * @param userSeq
      * @return
      */
+    @AccessUser
     @RequestMapping({"/board/boardReg", "/board/boardMod"})
     public ModelAndView boardForm(BoardDto board) {
         
@@ -76,6 +79,7 @@ public class BoardController extends BaseController {
      * @author yong
      *
      */
+    @AccessUser
     @RequestMapping({"/board/boardSave", "/board/boardUpdate"})
     public ModelAndView boardSave(BoardDto board) {
         ModelAndView mv = new ModelAndView();
@@ -104,6 +108,7 @@ public class BoardController extends BaseController {
     public ModelAndView boardList(BoardDto board) {
         ModelAndView mv = new ModelAndView();
 
+        log.debug("키워드 데이터 ===> {}", board.getSearchKeyword());
         // 페이징 처리 데이터
         board.setStartNum(0);
         board.setPageCount(Const.pageCount); // 몇개씩 조회할 것인지.
@@ -111,6 +116,7 @@ public class BoardController extends BaseController {
         mv.addObject("boardCount", this.boardService.selectBoardListCount());
         mv.addObject("list", this.boardService.boardList(board));
         mv.addObject("ctgSeq", board.getCtgSeq());
+        mv.addObject("board", board);
         mv.setViewName("/index");
 
         return mv;

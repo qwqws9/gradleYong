@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import yong.common.DateFormat;
 import yong.common.HashUtil;
 import yong.common.Result;
 import yong.dto.BoardDto;
@@ -101,8 +102,7 @@ public class BoardService {
 
         log.debug("textHtml ====> {}",board.getTextHtml());
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        board.setBoardRegDt(format.format(System.currentTimeMillis()));
+        board.setBoardRegDt(DateFormat.getRegDate());
         BoardEntity entity = this.boardJpa.save(board.toEntity(BoardEntity.class));
         
         if(!StringUtils.isEmpty(board.getTempSeq())) {

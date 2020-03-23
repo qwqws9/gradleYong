@@ -53,6 +53,7 @@
     </div>
     <input type="hidden" id="boardCount" value="${boardCount }"/>
     <input type="hidden" id="ctgSeq" value="${ctgSeq }"/>
+    <input type="hidden" id="searchKeyword" value="${board.searchKeyword }"/>
     <hr>
 
     <jsp:include page="/WEB-INF/layout/footer.jsp"></jsp:include>
@@ -74,13 +75,14 @@ function boardListAdd() {
         type        : 'POST',
         data        : {
             startNum : startNum,
-            ctgSeq : $('#ctgSeq').val()
+            ctgSeq : $('#ctgSeq').val(),
+            searchKeyword : $('#searchKeyword').val()
         },
         dataType    : 'html',
-        success        : function(data, status){
+        success        : function(data, status) {
             $('#boardList').append(data);
         },
-        error        : function(request, status, error){
+        error        : function(request, status, error) {
             console.log('[ERROR]\nCODE : ' + request.status + '\nMESSAGE : ' + request.responseText + '\nERROR : ' + error);
         }
     });
@@ -88,7 +90,9 @@ function boardListAdd() {
 
 $(function() {
     $('#ctgList').load("/layout/left", function() {
-        
+    	if ($('#searchKeyword').val() != '') {
+            $('#boardSearchKeyword').val($('#searchKeyword').val());
+        }
     });
     
      $(window).scroll(function(){
@@ -102,7 +106,9 @@ $(function() {
              startNum += 10;
              boardListAdd();
          }
-     })
+     });
+     
+     
 })
 </script>
 </body>

@@ -15,5 +15,5 @@
                 </c:forEach>
         </ul>
     </div><!--/.well -->
-    <input type="text" id="boardSearchKeyword" placeholder="검색..."/>
+    <input type="text" id="boardSearchKeyword" placeholder="검색..." value="${searchKeyword }"/>
 </div>

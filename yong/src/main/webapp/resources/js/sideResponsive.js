@@ -26,8 +26,9 @@ $(function() {
     
     // 검색 키워드 이벤트
     $(document).on('keyup','#boardSearchKeyword', function(event) {
-    	if ($('#boardSearchKeyword').val().trim() != '' && event.keyCode == 13) {
-    		// 검색 로직 추가하기 !!!!!!!!!!!!
+    	var keyword = $('#boardSearchKeyword').val().trim();
+    	if (keyword != '' && event.keyCode == 13) {
+    		location.href = '/board/boardList?searchKeyword='+keyword;
     	}
     })
 });

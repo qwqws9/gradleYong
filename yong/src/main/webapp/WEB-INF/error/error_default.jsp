@@ -18,7 +18,7 @@
     <div class="container-fluid">
         <div class="row-fluid">
           <!-- 왼쪽 사이드 메뉴바 -->
-          <jsp:include page="/WEB-INF/layout/left.jsp"></jsp:include>
+          <div class="float_sidebar" id="ctgList"></div>
           
         <div class="span9">
         
@@ -35,9 +35,7 @@
 
       <hr>
 
-      <footer>
-        <p>&copy; Company 2013</p>
-      </footer>
+        <jsp:include page="/WEB-INF/layout/footer.jsp"></jsp:include>
     </div><!--/.fluid-container-->
     
 <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -45,6 +43,11 @@
 <!-- 사이드 메뉴 스크롤에 따라 움직이는 스크립트 -->
 <script src="/resources/js/sideResponsive.js"></script>
 <script>
+$(function() {
+    $('#ctgList').load("/layout/left", function() {
+        
+    });
+})
 </script>
 
 </body>

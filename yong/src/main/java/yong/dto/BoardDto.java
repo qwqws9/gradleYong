@@ -25,4 +25,6 @@ public class BoardDto extends BaseDto {
     
     private int startNum;
     private int pageCount;
+    
+    private String searchKeyword;
 }

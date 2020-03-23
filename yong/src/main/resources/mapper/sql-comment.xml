@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="yong.mapper.CommentMapper">
+
+	<select id="selectStepMaxCount" parameterType="CommentDto" resultType="int">
+		SELECT MAX(step)+1
+		  FROM comments
+		 WHERE board_seq = #{boardSeq}
+	</select>
+	
+	<select id="selectCommentList" parameterType="CommentDto" resultType="CommentDto">
+		SELECT comment_seq,
+			   board_seq,
+			   content,
+			   reg_dt,
+			   writer,
+			   del_Yn,
+			   step,
+			   parent_seq
+		  FROM comments
+		 WHERE board_seq = #{boardSeq}
+		   AND step = 0
+		 ORDER BY parent_seq DESC, step ASC
+	</select>
+	
+	<select id="selectCommentChildList" parameterType="CommentDto" resultType="CommentDto">
+		SELECT comment_seq,
+			   board_seq,
+			   content,
+			   reg_dt,
+			   writer,
+			   del_Yn,
+			   step,
+			   parent_seq
+		  FROM comments
+		 WHERE board_seq = #{boardSeq}
+		   AND step != 0
+		 ORDER BY parent_seq DESC, step ASC
+	</select>
+</mapper>

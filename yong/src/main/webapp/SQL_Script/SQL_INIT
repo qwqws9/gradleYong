@@ -47,7 +47,23 @@ CREATE TABLE files (
     del_yn VARCHAR(1) NOT NULL DEFAULT 'N' COMMENT '삭제 여부'
 );
 
+CREATE TABLE comments (
+	comment_seq INT(100) NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '댓글 번호',
+	board_seq INT(100) NOT NULL COMMENT '게시글 번호',
+	content VARCHAR(2000) NOT NULL COMMENT '댓글 내용',
+	reg_dt VARCHAR(14) NOT NULL COMMENT '작성 시간',
+	writer VARCHAR(100) NOT NULL COMMENT '작성자',
+	pwd VARCHAR(1000) NOT NULL COMMENT '비밀번호',
+	del_yn VARCHAR(10) NOT NULL COMMENT '삭제 여부',
+	step INT(100) NOT NULL COMMENT '대댓글 구분',
+	parent_seq INT(100) COMMENT '부모 댓글번호',
+	FOREIGN KEY(board_seq) REFERENCES board(board_seq)
+);
+
+
+
 한글처리
 ALTER TABLE board CONVERT TO CHARSET utf8;
 ALTER TABLE ctg CONVERT TO CHARSET utf8;
 ALTER TABLE ctg_mst CONVERT TO CHARSET utf8;
+ALTER TABLE comments CONVERT TO CHARSET utf8;

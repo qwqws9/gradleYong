@@ -29,17 +29,21 @@
                         <fmt:parseDate value="${board.boardRegDt}" var="boardRegDt" pattern="yyyyMMddHHmmss"/>
                         <fmt:formatDate value="${boardRegDt}" pattern="yyyy-MM-dd HH:mm:ss"/>
                     </small>
-                <hr>
-                    ${board.boardContent }
-                </div>
-                <c:if test="${userInfo.userRole eq 'admin' }">
-                    <div class="control-group">
-                        <div class="controls">
-                            <button type="button" class="btn" onclick="location.href='/board/boardMod?boardSeq=${board.boardSeq}'">수정</button>
-                            <button type="button" class="btn" onclick="boardDelete()">삭제</button>
-                        </div>
-                    </div>
-                </c:if>
+                    <c:if test="${userInfo.userRole eq 'admin' }">
+	                    <div class="control-group pull-right">
+	                        <div class="controls">
+	                            <button type="button" class="btn" onclick="location.href='/board/boardMod?boardSeq=${board.boardSeq}'">수정</button>
+	                            <button type="button" class="btn" onclick="boardDelete()">삭제</button>
+	                        </div>
+	                    </div>
+                	</c:if>
+	                <hr>
+	                    ${board.boardContent }
+	                <hr>
+	                <div id="commentList">
+	        			<jsp:include page="/WEB-INF/comment/commentList.jsp"></jsp:include>
+	        		</div>
+        		</div>
             </div><!--/span-->
       </div><!--/row-->
 
