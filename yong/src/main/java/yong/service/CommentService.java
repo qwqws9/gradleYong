@@ -30,7 +30,7 @@ public class CommentService {
     public Result commentSave(CommentDto comment) {
         
         if (StringUtils.isEmpty(comment.getContent()) || StringUtils.isEmpty(comment.getWriter()) || StringUtils.isEmpty(comment.getPwd())) {
-            throw new BadRequestException("폼 데이터 누락");
+            return new Result(100, "폼 데이터 누락");
         }
         
         comment.setStep(0);

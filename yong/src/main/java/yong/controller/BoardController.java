@@ -1,6 +1,7 @@
 package yong.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,9 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import yong.annotation.AccessUser;
 import yong.common.Const;
 import yong.dto.BoardDto;
+import yong.dto.CommentDto;
 import yong.dto.UserDto;
 import yong.exception.BadRequestException;
 import yong.service.BoardService;
+import yong.service.CommentService;
 import yong.service.CtgService;
 import yong.service.UserService;
 
@@ -40,6 +43,9 @@ public class BoardController extends BaseController {
 
     @Autowired
     private CtgService ctgService;
+    
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 
@@ -155,12 +161,17 @@ public class BoardController extends BaseController {
      * @return
      */
     @RequestMapping("/board/getBoard/{boardSeq}")
-    public ModelAndView getBoard(@PathVariable String boardSeq) {
-        if (StringUtils.isEmpty(boardSeq)) { throw new BadRequestException("존재하지 않는 게시물입니다."); }
+    public ModelAndView getBoard(@PathVariable String boardSeq, CommentDto comment) {
+        if (StringUtils.isEmpty(boardSeq) || !NumberUtils.isNumber(boardSeq)) { throw new BadRequestException("존재하지 않는 게시물입니다."); }
 
         ModelAndView mv = new ModelAndView();
 
         mv.addObject("board", this.boardService.boardSelect(boardSeq));
+        
+//        comment.setBoardSeq(Long.valueOf(boardSeq));
+//        mv.addObject("parentComment", this.commentService.selectCommentList(comment));
+//        mv.addObject("childComment", this.commentService.selectCommentChildList(comment));
+
         mv.setViewName("/board/getBoard");
 
         return mv;

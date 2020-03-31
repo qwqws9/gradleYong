@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import yong.common.Result;
 import yong.dto.CommentDto;
@@ -37,8 +40,20 @@ public class CommentController extends BaseController {
     @RequestMapping("/comment/commentList")
     public ModelAndView commentList(CommentDto comment) {
         ModelAndView mv = new ModelAndView();
-        mv.addObject("commentList", this.commentService.selectCommentList(comment));
-        mv.addObject("commentChildList", this.commentService.selectCommentChildList(comment));
+        
+        List<CommentDto> parentComment = this.commentService.selectCommentList(comment);
+        List<CommentDto> childComment = this.commentService.selectCommentChildList(comment);
+
+        mv.addObject("commentList", parentComment);
+        mv.addObject("commentChildList", childComment);
+        
+        ObjectMapper om = new ObjectMapper();
+        try {
+            mv.addObject("commentListJson", om.writeValueAsString(parentComment));
+        } catch (JsonProcessingException e) {
+            log.error("String -> Json 에러");
+        }
+        
         mv.setViewName("/comment/commentForm");
 
         return mv;

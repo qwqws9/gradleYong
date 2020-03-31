@@ -1,3 +1,18 @@
+MySQL 외부 접속 (ERROR 1130 Host 'x.x.x.x' is not allowed to connect to this MySQL server 해결 방안)
+
+// 외부에서 DB 접속할때 권한 주는것.
+GRANT ALL PRIVILEGES ON yong.* TO root@"192.168.0.187" IDENTIFIED BY 'yong';
+
+// 모든 IP에 대해 접속 가능
+GRANT ALL PRIVILEGES ON yong.* TO root@"%" IDENTIFIED BY 'yong';
+
+// 모든 IP와 DB에 접근 가능
+GRANT ALL PRIVILEGES ON *.* TO root@"%" IDENTIFIED BY 'yong';
+
+----------------------------------------------------------------------------------------
+
+//테이블 생성
+
 
 CREATE TABLE ctg_mst (
     ctg_mst_seq INT(100) PRIMARY KEY AUTO_INCREMENT COMMENT '카테고리 마스터 번호',

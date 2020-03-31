@@ -33,9 +33,13 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
         
             log.debug("=================================== START ===============================");
             log.debug("Request URI \t : " + request.getRequestURI());
-            Method method = ((HandlerMethod) handler).getMethod();
-            // 관리자 권한 체크
-            this.AdminAuthCheck(request, handler, method);
+            
+         // 컨트롤러에 대한 요청인 경우를 처리함. 일반 이미지나 HTML 요청은 스킵
+            if (handler instanceof HandlerMethod) {
+                Method method = ((HandlerMethod) handler).getMethod();
+                // 관리자 권한 체크
+                this.AdminAuthCheck(request, handler, method);
+            }
             
         }
         return super.preHandle(request, response, handler);

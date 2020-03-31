@@ -26,7 +26,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li class="dropdown">
-                        <a id="adminDropMenu"  role="button" class="dropdown-toggle" data-toggle="dropdown">관리자 메뉴 <b class="caret"></b></a>
+                        <a id="adminDropMenu"  role="button" class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;">관리자 메뉴 <b class="caret"></b></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="adminDropMenu">
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="/board/boardReg">게시물 작성</a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="/board/boardList">목록</a></li>

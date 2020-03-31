@@ -52,6 +52,11 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
     // 커스텀태그 사용 라이브러리
     compile group: 'org.apache.taglibs', name: 'taglibs-standard-impl', version: '1.2.5'
+    // https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
+    compile group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.2'
+    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on
+    compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
+    
 
     
 
