@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Slf4j
 public class LoggerAspect {
-    
     // 포인트컷 표현식
     // execution(void board..insert*(..))  리턴타입이 void이고 board 패키지 하위의 모든 패키지중에서 insert로 시작하고 파라미터가 0개 이상인 메서드 호출
     // execution(* board..controller.*Controller.*(..)) 모든 리턴타입과 board 패키지 하위의 패키지중 controller 패키지에 Controller로 끝나는 클래스중
