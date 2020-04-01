@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JasyptConfig {
-    private static final String ENCRYPT_KEY = "toma";
+    private static final String ENCRYPT_KEY = "gEk@jq24!";
 
     @Bean("jasyptStringEncrptor")
     public StringEncryptor stringEncryptor() {
