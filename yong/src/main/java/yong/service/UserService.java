@@ -66,7 +66,7 @@ public class UserService {
         }
         
         user.setUserStatCd("1");
-        user.setUserRole("admin");
+        user.setUserRole("user");
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         user.setRegDt(format.format(System.currentTimeMillis()));
         user.setUserPwd(HashUtil.sha512(user.getUserPwd(), user.getUserPwd()));

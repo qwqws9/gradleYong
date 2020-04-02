@@ -41,7 +41,14 @@
 	                    ${board.boardContent }
 	                <hr>
 	                <div id="commentList">
-	        			<jsp:include page="/WEB-INF/comment/commentList.jsp"></jsp:include>
+<%-- 	        			<jsp:include page="/WEB-INF/comment/commentList.jsp"></jsp:include> --%>
+	        			<script src="https://utteranc.es/client.js"
+						        repo="qwqws9/blog-comments"
+						        issue-term="pathname"
+						        theme="github-light"
+						        crossorigin="anonymous"
+						        async>
+						</script>
 	        		</div>
         		</div>
             </div><!--/span-->
@@ -101,6 +108,8 @@ $(function() {
     $('#ctgList').load("/layout/left", function() {
         
     });
+    
+    $('.utterances').css('margin-left',0);
 });
 </script>
 
