@@ -7,7 +7,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Bootstrap, from Twitter</title>
     <!-- bootstrap CDN , 반응형 CSS style -->
     <jsp:include page="/WEB-INF/layout/header.jsp"></jsp:include>
 </head>
@@ -75,7 +74,6 @@ function parentFn(imgPathList) {
         html.push(imgTag);
         html.push(item);
         html.push('"/>');
-        console.log(html);
         oEditors.getById["boardContent"].exec("PASTE_HTML", [html.join('')]);
     })
 }

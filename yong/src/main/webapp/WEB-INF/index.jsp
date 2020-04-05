@@ -7,7 +7,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Bootstrap, from Twitter</title>
     <!-- bootstrap CDN , 반응형 CSS style -->
     <jsp:include page="/WEB-INF/layout/header.jsp"></jsp:include>
 </head>
@@ -24,7 +23,7 @@
         <div class="span9" id="boardList">
             <div class="hero-unit">
                 <h1>Hi..</h1>
-                <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                <p>Java + Spring boot + Gradle + Mybatis + Spring Data Jpa + GCP(Jenkins, httpd, tomcat, mod_jk, mysql)</p>
                 <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
             </div>
 
@@ -32,7 +31,7 @@
                 <div class="row-fluid">
                     <div class="span4">
                         <div class="card">
-                        <a href="/board/getBoard/${board.boardSeq }"><img class="card-img-top" src="/resources/img/upload/${board.filePath }" onerror="this.src='/resources/img/unnamed.gif'"></a>
+                        	<a href="/board/getBoard/${board.boardSeq }"><img class="card-img-top" src="/resources/img/upload/${board.filePath }" onerror="this.src='/resources/img/unnamed.gif'"></a>
                         </div>
                     </div><!--/span-->
                     <div class="span8">

@@ -2,6 +2,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
+<title>Yong blog..</title>
 <!-- Le styles -->
 <link href="/resources/css/bootstrap.css" rel="stylesheet">
 <style type="text/css">
