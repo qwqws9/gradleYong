@@ -22,9 +22,9 @@
                     </c:if>
                 </p>
                 <ul class="nav" role="navigation">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="/openApi/naverMap2">전기차 충전소</a></li>
+                    <li><a href="/openApi/museumList">박물관</a></li>
                     <li class="dropdown">
                         <a id="adminDropMenu"  role="button" class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;">관리자 메뉴 <b class="caret"></b></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="adminDropMenu">

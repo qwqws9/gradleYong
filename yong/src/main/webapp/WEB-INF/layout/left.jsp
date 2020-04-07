@@ -16,4 +16,7 @@
         </ul>
     </div><!--/.well -->
     <input type="text" id="boardSearchKeyword" placeholder="검색..." value="${searchKeyword }"/>
+    <div>
+        <button type="button" style="border: 0; outline: 0; margin-top: 300px; margin-left: 250px;" id="goTop"><i class="icon-eject"></i>Top</button>
+    </div>
 </div>

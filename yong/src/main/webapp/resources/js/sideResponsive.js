@@ -31,4 +31,10 @@ $(function() {
     		location.href = '/board/boardList?searchKeyword='+keyword;
     	}
     })
+    
+    $(document).on('click', '#goTop', function() {
+    	$('html').animate({
+    		scrollTop : 0
+    	}, 500);
+    })
 });
