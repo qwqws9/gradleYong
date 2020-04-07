@@ -118,7 +118,7 @@ function search(chargeList) {
 	    markers.push(marker);
 	    infoWindows.push(infoWindow);
 	    if (i == 0) {
-	        contentEl.find('.choiceArea').text(contentEl.find('.choiceArea').text()+" | "+ charge.totalCount + "개")
+	        contentEl.find('.totalCount').text(charge.totalCount + "개");
 	    }
 	    
 	};
@@ -229,6 +229,7 @@ naver.maps.Event.once(map, 'init_stylemap', function () {
 
 var contentEl = $('<div class="iw_inner" style="width:300px;position:absolute;top:0;right:0;z-index:1000;background-color:#fff;border:solid 1px #333;padding:15px;">'
 		+ '<p style="font-size:14px;">선택된 행정구역 : <em class="choiceArea">없음</em></p>'
+		+ '<p style="font-size:14px;">검색결과 수 : <em class="totalCount">0건</em></p>'
         + '<p style="font-size:14px;">zoom : <em class="zoom">'+ map.getZoom() +'</em></p>'
         + '<p style="font-size:14px;">centerPoint : <em class="center">'+ map.getCenterPoint() +'</em></p>'
         + '</div>');

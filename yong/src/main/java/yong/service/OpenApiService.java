@@ -139,7 +139,6 @@ public class OpenApiService {
                 charge.setStatUpdateTime((String)obj.get("statUpdateDatetime"));
                 charge.setTotalCount(totalCount);
                 
-                System.out.println(charge.toString());
                 list.add(charge);
             }
         } catch (Exception e) {
