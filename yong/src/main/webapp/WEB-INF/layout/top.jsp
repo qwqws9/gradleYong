@@ -22,7 +22,7 @@
                     </c:if>
                 </p>
                 <ul class="nav" role="navigation">
-                    <li><a href="#"></a></li>
+                    <li><a href="/openApi/naverMap">클러스터링 테스트</a></li>
                     <li><a href="/openApi/naverMap2">전기차 충전소</a></li>
                     <li><a href="/openApi/museumList">박물관</a></li>
                     <li class="dropdown">

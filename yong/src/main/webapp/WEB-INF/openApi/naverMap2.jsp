@@ -37,6 +37,7 @@
 <script src="/resources/js/bootstrap.js"></script>
 <!-- 사이드 메뉴 스크롤에 따라 움직이는 스크립트 -->
 <script src="/resources/js/sideResponsive.js"></script>
+
 <script>
 $(function() {
 	

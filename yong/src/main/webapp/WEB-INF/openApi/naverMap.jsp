@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <!-- bootstrap CDN , 반응형 CSS style -->
     <jsp:include page="/WEB-INF/layout/header.jsp"></jsp:include>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId }"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId }&callback=chargeData"></script>
     <script type="text/javascript" src="/resources/js/MarkerClustering.js"></script>
 </head>
 <body>
@@ -38,129 +38,92 @@
 <!-- 사이드 메뉴 스크롤에 따라 움직이는 스크립트 -->
 <script src="/resources/js/sideResponsive.js"></script>
 <script>
-$(function() {
+var map = new naver.maps.Map("map", {
+    zoom: 7,
+    center: new naver.maps.LatLng(36.2253017, 127.6460516),
+    zoomControl: true,
+    zoomControlOptions: {
+        position: naver.maps.Position.TOP_LEFT,
+        style: naver.maps.ZoomControlStyle.SMALL
+    }
+}),
+markers = [];
+
+var htmlMarker1 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/resources/img/cluster-marker-1.png);background-size:contain;"></div>',
+    size: N.Size(40, 40),
+    anchor: N.Point(20, 20)
+},
+htmlMarker2 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/resources/img/cluster-marker-2.png);background-size:contain;"></div>',
+    size: N.Size(40, 40),
+    anchor: N.Point(20, 20)
+},
+htmlMarker3 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/resources/img/cluster-marker-3.png);background-size:contain;"></div>',
+    size: N.Size(40, 40),
+    anchor: N.Point(20, 20)
+},
+htmlMarker4 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/resources/img/cluster-marker-4.png);background-size:contain;"></div>',
+    size: N.Size(40, 40),
+    anchor: N.Point(20, 20)
+},
+htmlMarker5 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/resources/img/cluster-marker-5.png);background-size:contain;"></div>',
+    size: N.Size(40, 40),
+    anchor: N.Point(20, 20)
+};
+
+//충전소 정보 가져오기(파라미터 : 주소)
+function chargeData() {
+// 	if (!addr) {
+// 		return false;
+// 	}
+	
 	$.ajax({
 	    url         : '/openApi/chargeMap',
 	    type        : 'POST',
 	    dataType    : 'json',
 	    success        : function(data, status) {
-	        search(data.infoMap.list);
+	    	onLoad(data.infoMap.list);
 	    },
 	    error        : function(request, status, error) {
 	        console.log('[ERROR]\nCODE : ' + request.status + '\nMESSAGE : ' + request.responseText + '\nERROR : ' + error);
 	    }
 	});
-})
+}
 
+function onLoad(data) {
 
-var HOME_PATH = window.HOME_PATH || '.';
+for (var i = 0, ii = data.length; i < ii; i++) {
+    var charge = data[i],
+        latlng = new naver.maps.LatLng(charge.lat, charge.lng),
+        marker = new naver.maps.Marker({
+            position: latlng,
+            draggable: true
+        });
 
-var markers = [];
-var infoWindows = [];
-var map = new naver.maps.Map('map', {
-    center: new naver.maps.LatLng(37.3595704, 127.105399),
-    zoom: 12
+    markers.push(marker);
+}
+
+var markerClustering = new MarkerClustering({
+    minClusterSize: 2,
+    maxZoom: 13,
+    map: map,
+    markers: markers,
+    disableClickZoom: false,
+    gridSize: 120,
+    icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+    indexGenerator: [10, 100, 200, 500, 1000],
+    stylingFunction: function(clusterMarker, count) {
+        $(clusterMarker.getElement()).find('div:first-child').text(count);
+    }
 });
-
-function search(chargeList) {
-	
-	var bounds = map.getBounds(),
-	    southWest = bounds.getSW(),
-	    northEast = bounds.getNE(),
-	    lngSpan = northEast.lng() - southWest.lng(),
-	    latSpan = northEast.lat() - southWest.lat();
-	
-	markers = [];
-	infoWindows = [];
-
-	for (var i in chargeList) {
-		var charge = chargeList[i];
-		
-		var content = ['<div>','/div>'].join('');
-		
-	    var marker = new naver.maps.Marker({
-	        position: new naver.maps.LatLng(charge.lat, charge.lng),
-	        map: map,
-// 	        title: key,
-	        icon: {
-	        	url: HOME_PATH +'/img/example/sp_pins_spot_v3.png',
-	            size: new naver.maps.Size(38, 58),
-	            anchor: new naver.maps.Point(19, 58)
-	        }
-	    });
-
-	    var infoWindow = new naver.maps.InfoWindow({
-	        content: '<div style="width:150px;text-align:center;padding:10px;">충전소 명 : <b>"'+ charge.statNm +'"</b>.</div>'
-	    });
-
-	    markers.push(marker);
-	    infoWindows.push(infoWindow);
-	};
-	
-	naver.maps.Event.addListener(map, 'idle', function() {
-	    updateMarkers(map, markers);
-	});
-// 	naver.maps.Event.addListener(map, 'zoom_changed', function() {
-//         updateMarkers(map, markers);
-//     });
-//     naver.maps.Event.addListener(map, 'dragend', function() {
-//         updateMarkers(map, markers);
-//     });
-
-
-	// 마커 클릭이벤트 등록..
-	for (var i=0, ii=markers.length; i<ii; i++) {
-		console.log(markers.length);
-	    naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
-	}
-	
 }
 
 
-function updateMarkers(map, markers) {
 
-    var mapBounds = map.getBounds();
-    var marker, position;
-
-    for (var i = 0; i < markers.length; i++) {
-
-        marker = markers[i]
-        position = marker.getPosition();
-
-        if (mapBounds.hasLatLng(position)) {
-            showMarker(map, marker);
-        } else {
-            hideMarker(map, marker);
-        }
-    }
-}
-
-function showMarker(map, marker) {
-
-    if (marker.setMap()) return;
-    marker.setMap(map);
-}
-
-function hideMarker(map, marker) {
-
-    if (!marker.setMap()) return;
-    marker.setMap(null);
-}
-
-// 해당 마커의 인덱스를 seq라는 클로저 변수로 저장하는 이벤트 핸들러를 반환합니다.
-function getClickHandler(seq) {
-    return function(e) {
-        var marker = markers[seq],
-            infoWindow = infoWindows[seq];
-
-        if (infoWindow.getMap()) {
-            infoWindow.close();
-        } else {
-            infoWindow.open(map, marker);
-        }
-    }
-}
-	
 $(function() {
 	 $('#ctgList').load("/layout/left", function() {
 	        
