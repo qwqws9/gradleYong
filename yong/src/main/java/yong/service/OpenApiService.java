@@ -29,7 +29,7 @@ import yong.exception.BadRequestException;
 @Slf4j
 public class OpenApiService {
 
-    private static final String serviceKey = "EDN60Wz8jkdcTTGJ34WRQ69%2Ff8XfEh56%2BJJjpq26BZm1WERBZOTwLurZUp2slBtc9q28liz7cWcItx0KPRi7Ag%3D%3D";
+    private static final String SERVICE_KEY = "EDN60Wz8jkdcTTGJ34WRQ69%2Ff8XfEh56%2BJJjpq26BZm1WERBZOTwLurZUp2slBtc9q28liz7cWcItx0KPRi7Ag%3D%3D";
 
 //    public static void main(String[] args) {
         
@@ -40,7 +40,7 @@ public class OpenApiService {
         try {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append("http://openapi.kepco.co.kr/service/EvInfoServiceV2/getEvSearchList?ServiceKey=");
-            urlBuilder.append(serviceKey);
+            urlBuilder.append(SERVICE_KEY);
             urlBuilder.append("&pageNo=1&");
             urlBuilder.append("numOfRows=3000&addr=");
             urlBuilder.append(addr);
@@ -155,7 +155,7 @@ public class OpenApiService {
         try {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append("http://open.ev.or.kr:8080/openapi/services/rest/EvChargerService?ServiceKey=");
-            urlBuilder.append(serviceKey);
+            urlBuilder.append(SERVICE_KEY);
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -216,7 +216,7 @@ public class OpenApiService {
         try {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append("http://www.emuseum.go.kr/openapi/relic/list?serviceKey=");
-            urlBuilder.append(serviceKey);
+            urlBuilder.append(SERVICE_KEY);
             urlBuilder.append("&pageNo=");
             urlBuilder.append(pageNo);
             urlBuilder.append("&numOfRows=");

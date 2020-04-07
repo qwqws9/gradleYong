@@ -140,6 +140,10 @@ function search(chargeList) {
 	    naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
 	}
 	
+	// 맵 드래그 허용 (마커 제거중 드래그시 멈춰버리는 현상 때문..)
+	map.setOptions({ draggable : true });
+	// 행정구역 클릭 허용
+	clickYn = true;
 }
 
 
@@ -249,6 +253,9 @@ var tooltip = $('<div style="position:absolute;z-index:1000;padding:5px 10px;bac
 
 tooltip.appendTo(map.getPanes().floatPane);
 
+// 비동기 통신중 맵 클릭 방지..
+var clickYn = true;
+
 function startDataLayer() {
     map.data.setStyle(function(feature) {
         var styleOptions = {
@@ -276,6 +283,14 @@ function startDataLayer() {
 
     // 행정구역 클릭 이벤트
     map.data.addListener('click', function(e) {
+    	
+    	if (!clickYn) { return false; }
+    	// 행정구역 클릭 제한
+    	clickYn = false;
+    	
+    	// 맵 드래그 제한
+    	map.setOptions({ draggable : false });
+    	
         var feature = e.feature;
         var area = feature.getProperty('area1');
         
@@ -291,16 +306,13 @@ function startDataLayer() {
             //feature.setProperty('focus', true);
         	
         	// 기존 맵에 그려진 마커 제거
-            for(var i = 0; i < markers.length; i++){
+            for (var i = 0; i < markers.length; i++) {
             	markers[i].setMap(null);
             }
         	// infoWindow 닫기
-            for(var i = 0; i < infoWindows.length; i++){
+            for (var i = 0; i < infoWindows.length; i++) {
             	infoWindows[i].close();
             }
-        	
-        	// 선택한 행정구역 명
-        	
         	
         	// KVO 변경
             contentEl.find('.choiceArea').text(area);
