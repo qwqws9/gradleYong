@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="/yong" prefix="yong" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +12,8 @@
     <jsp:include page="/WEB-INF/layout/header.jsp"></jsp:include>
 </head>
 <body>
+<%-- 	${yong:getTest('오라클') } --%>
+<%-- 	<yong:test test2="테스트 2" test1="테스트 1" test3="테스트 3"></yong:test> --%>
     <!-- 상단 메뉴바 -->
     <jsp:include page="/WEB-INF/layout/top.jsp"></jsp:include>
 

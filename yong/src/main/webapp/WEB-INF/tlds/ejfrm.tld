@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+    <tlib-version>1.0</tlib-version>
+    <short-name>yong</short-name>
+    <uri>/yong</uri>
+
+	<tag>
+        <description>태그라이브러리 테스트</description>
+        <name>test</name>
+        <tag-class>yong.taglib.SelectTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>테스트 속성1</description>
+            <name>test1</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>테스트 속성2</description>
+            <name>test2</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>테스트 속성3</description>
+            <name>test3</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+	<function>
+        <description>문자열에 님 붙이기</description>
+        <name>getTest</name>
+        <function-class>yong.taglib.CommonUtil</function-class>
+        <function-signature>java.lang.String getTest(java.lang.String)</function-signature>
+        <example>
+        	${yong:getTest(str)}
+        </example>
+    </function>
+
+
+</taglib>
+
+
+
