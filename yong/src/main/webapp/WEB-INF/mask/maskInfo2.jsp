@@ -403,7 +403,6 @@ nNumber : 1
     </div>
 </div>
 <div id="AA">
-<a href="#">구매하기</a>
 
 </div>
         <ul class="list_policy">
