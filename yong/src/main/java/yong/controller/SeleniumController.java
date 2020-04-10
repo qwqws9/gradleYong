@@ -28,7 +28,7 @@ public class SeleniumController {
     private static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
 
     // http://chromedriver.chromium.org/downloads 크롬 드라이버 버전에 맞게 설치
-    private static final String WEB_DRIVER_PATH = "/home/ejfrmtest/webapp/WEB-INF/mask/chromedriver.exe";
+    private static final String WEB_DRIVER_PATH = "/home/ejfrmtest/webapp/WEB-INF/mask/chromedriver";
 
     // 로그인을 위한 네이버 페이지 URL
     private static final String NAVER_URL = "https://www.naver.com";
