@@ -25,8 +25,13 @@
 
         <div class="span9" id="boardList">
             <div class="hero-unit">
-                <h1>Hi..</h1>
-                <p>Java + Spring boot + Gradle + Mybatis + Spring Data Jpa + GCP(Jenkins, httpd, tomcat, mod_jk, mysql)</p>
+                <p>Java + Spring boot + Gradle + Mybatis + Spring Data Jpa + GCP(Jenkins, httpd, tomcat, mod_jk, mysql) + Github(webhook)</p>
+                <h4>설명서..</h4>
+                <p>해당 판매사이트 링크 클릭하게되면 새창으로 네이버가 열림</p>
+                <p>15초안에 로그인버튼을 클릭 후 로그인 진행후 대기 <small>(자동로그인 안됨)</small></p>
+                <p>사이트 이동전에 검색버튼 클릭되는것은 정상 <small>(사용자 조작시 로그인 유지가 안되어 검색 버튼을 클릭하게 설정됨)</small></p>
+                <p>구매가능 상태가되면 결제창으로 이동하며 이후 결제는 수동진행</p>
+                
                 <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
             </div>
 
