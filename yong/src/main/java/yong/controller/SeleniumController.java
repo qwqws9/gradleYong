@@ -21,14 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SeleniumController {
 
-    private WebDriver driver;
+//    private WebDriver driver;
 
     private static ChromeOptions option;
 
     private static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
 
-    // http://chromedriver.chromium.org/downloads 크롬 드라이버 버전에 맞게 설치
-    private static final String WEB_DRIVER_PATH = "/home/ejfrmtest/webapp/WEB-INF/mask/chromedriver";
+    // http://chromedriver.chromium.org/downloads 크롬 드라이버 버전에 맞게 설치 후 경로 기입
+    private static final String WEB_DRIVER_PATH = "C:\\Users\\yong\\Downloads\\chromedriver_win32\\chromedriver.exe";
 
     // 로그인을 위한 네이버 페이지 URL
     private static final String NAVER_URL = "https://www.naver.com";
@@ -47,34 +47,9 @@ public class SeleniumController {
         // option.addArguments("headless");
     }
 
-    @RequestMapping("/maskInfo")
-    public String maskInfo() {
-        // Math.floor(Math.random() * 10) + 1
-        Random random = new Random();
-        int result = random.nextInt(30) + 1;
-
-        if (result > 1) { return "/mask/maskInfoView"; }
-
-        return "/mask/maskInfo2";
-    }
-
-    @RequestMapping("/maskInfoView")
-    public String maskInfoView() {
-        return "/mask/maskInfoView";
-    }
-
-    @RequestMapping("/localTest")
-    public String localTest() {
-        this.maskShopUrl ="http://localhost:8080/maskInfo";
-        this.getMask("중형","품절");
-
-        return "redirect:/";
-    }
-    
-    
     /**
      * 
-     * 미마 마스크
+     * 미마 마스크 졸업 // 엔에이웰
      *
      * @since 2020. 4. 9.
      * @author yong
@@ -83,8 +58,11 @@ public class SeleniumController {
      */
     @RequestMapping("/mask")
     public String mask() {
-        this.maskShopUrl ="https://smartstore.naver.com/aseado/products/4837257765";
-        this.getMask("중형","품절");
+        //엔에이웰
+        this.maskShopUrl ="https://smartstore.naver.com/pyeongpyoen/products/4690028600";
+        //미마
+//        this.maskShopUrl ="https://smartstore.naver.com/aseado/products/4837257765";
+        this.getMask("마스크","중형","품절");
 
         return "redirect:/";
     }
@@ -101,7 +79,7 @@ public class SeleniumController {
     @RequestMapping("/maskAer")
     public String maskAer() {
         this.maskShopUrl ="https://smartstore.naver.com/aer-shop/products/4722827602";
-        getMask("L","품절");
+        getMask("필수옵션","L","품절");
 
         return "redirect:/";
     }
@@ -109,14 +87,14 @@ public class SeleniumController {
     @RequestMapping("/maskDrpuri1")
     public String maskDrpuri1() {
         this.maskShopUrl ="https://smartstore.naver.com/mfbshop/products/4072573492";
-        getMask("대형","품절");
+        getMask("사이즈","대형","품절");
         
         return "redirect:/";
     }
     @RequestMapping("/maskDrpuri2")
     public String maskDrpuri2() {
         this.maskShopUrl ="https://smartstore.naver.com/mfbshop/products/4072435942";
-        getMask("대형","품절");
+        getMask("사이즈","대형","품절");
         
         return "redirect:/";
     }
@@ -131,13 +109,39 @@ public class SeleniumController {
         return "redirect:/";
     }
     
+    @RequestMapping("/mask4")
+    public String mask4() {
+        this.maskShopUrl ="https://smartstore.naver.com/gonggami/products/4705579501";
+        
+//        this.maskShopUrl ="https://smartstore.naver.com/soommask/products/4828127993";
+        this.getMaskNoOption();
+        
+        return "redirect:/";
+    }
+    
+    /** 샤인웰 10:00 */
+    @RequestMapping("/mask5")
+    public String mask5() {
+        this.maskShopUrl ="https://smartstore.naver.com/shinewell_healthcare/products/4861603330";
+        this.getMaskNoOption();
+        
+        return "redirect:/";
+    }
     
     
     
+    /**
+     * 
+     * 옵션 선택항목이 없는 사이트
+     *
+     * @since 2020. 4. 10.
+     * @author yong
+     *
+     */
     private void getMaskNoOption() {
-        driver = new ChromeDriver(option);
+        WebDriver driver = new ChromeDriver(option);
 
-        WebDriverWait wait = new WebDriverWait(this.driver, 18000);
+        WebDriverWait wait = new WebDriverWait(driver, 18000);
 
         try {
             // 로그인을 위한 naver 이동
@@ -160,13 +164,13 @@ public class SeleniumController {
             });
 
             // 로그인 성공 후 마스크 판매처로 URL 이동
-            this.driver.navigate().to(this.maskShopUrl);
-            this.driver.get(this.maskShopUrl);
+            driver.navigate().to(this.maskShopUrl);
+            driver.get(this.maskShopUrl);
             WebElement webElement = null;
 
-            wait = new WebDriverWait(this.driver, 60000);
+            wait = new WebDriverWait(driver, 60000);
             // 새로고침 속도
-            wait.pollingEvery(Duration.ofMillis(50));
+            wait.pollingEvery(Duration.ofMillis(10));
             
             boolean soldout = true;
 
@@ -176,10 +180,19 @@ public class SeleniumController {
                     @Override
                     public WebElement apply(WebDriver webDriver) {
                         driver.navigate().refresh();
+                        // 페이지 에러날때 네이버 홈 이동 후 다시 사이트로 이동 (테스트중)
+                        if (driver.findElements(By.className("title_error")).size() != 0) {
+                            driver.navigate().to(NAVER_URL);
+                            driver.findElement(By.cssSelector("#search_btn")).click();
+                            driver.navigate().to(maskShopUrl);
+                            driver.get(maskShopUrl);
+                        }
+
                         return driver.findElement(By.linkText("구매하기"));
                     }
                 });
-                if (!webElement.getAttribute("class").contains("stop")) {
+                log.debug("==============>>>>>>>>>>>>>>>>>>>>>>>>> {}",webElement.getAttribute("class"));
+                if (webElement.getAttribute("class").length() > 12) {
                     soldout = false;
                     webElement.click();
                 }
@@ -198,40 +211,41 @@ public class SeleniumController {
      * @since 2020. 4. 10.
      * @author yong
      *
-     * @param includeText 셀렉트박스에서 포함될 단어
+     * @param selectText 셀렉트박스 기본 텍스트
+     * @param containText 셀렉트박스에서 포함될 단어
      * @param exceptText 셀렉트박스에서 제외될 단어
      */
-    private void getMask(String includeText,String exceptText) {
-        driver = new ChromeDriver(option);
+    private void getMask(String selectText, String containText,String exceptText) {
+        WebDriver driver = new ChromeDriver(option);
 
-        WebDriverWait wait = new WebDriverWait(this.driver, 18000);
+        WebDriverWait wait = new WebDriverWait(driver, 18000);
 
         try {
             // 로그인을 위한 naver 이동
-//            driver.navigate().to(NAVER_URL);
-//
-//            // 로그인 성공시까지 5초마다 DOM 탐색
-//            wait.pollingEvery(Duration.ofMillis(5000));
-//            wait.until(new Function<WebDriver, WebElement>() {
-//                @Override
-//                public WebElement apply(WebDriver webDriver) {
-//                    count++;
-//                    log.debug("로그인성공까지 대기중....");
-//
-//                    // 브라우저 열리고 사용자가 조작시 DOM 탐색을 못하므로 15초마다 검색버튼 클릭
-//                    if (count % 3 == 0) {
-//                        driver.findElement(By.cssSelector("#search_btn")).click();
-//                    }
-//                    return driver.findElement(By.cssSelector(".gnb_my"));
-//                }
-//            });
+            driver.navigate().to(NAVER_URL);
+
+            // 로그인 성공시까지 5초마다 DOM 탐색
+            wait.pollingEvery(Duration.ofMillis(5000));
+            wait.until(new Function<WebDriver, WebElement>() {
+                @Override
+                public WebElement apply(WebDriver webDriver) {
+                    count++;
+                    log.debug("로그인성공까지 대기중....");
+
+                    // 브라우저 열리고 사용자가 조작시 DOM 탐색을 못하므로 15초마다 검색버튼 클릭
+                    if (count % 3 == 0) {
+                        driver.findElement(By.cssSelector("#search_btn")).click();
+                    }
+                    return driver.findElement(By.cssSelector(".gnb_my"));
+                }
+            });
 
             // 로그인 성공 후 마스크 판매처로 URL 이동
-            this.driver.navigate().to(this.maskShopUrl);
-            this.driver.get(this.maskShopUrl);
+            driver.navigate().to(this.maskShopUrl);
+            driver.get(this.maskShopUrl);
             WebElement webElement = null;
 
-            wait = new WebDriverWait(this.driver, 60000);
+            wait = new WebDriverWait(driver, 60000);
             // 새로고침 속도
             wait.pollingEvery(Duration.ofMillis(10));
             
@@ -243,21 +257,28 @@ public class SeleniumController {
                     @Override
                     public WebElement apply(WebDriver webDriver) {
                         driver.navigate().refresh();
+                        // 페이지 에러날때 네이버 홈 이동 후 다시 사이트로 이동 (테스트중)
+                        if (driver.findElements(By.className("title_error")).size() != 0) {
+                            driver.navigate().to(NAVER_URL);
+                            driver.findElement(By.cssSelector("#search_btn")).click();
+                            driver.navigate().to(maskShopUrl);
+                            driver.get(maskShopUrl);
+                        }
                         return driver.findElement(By.linkText("구매하기"));
                     }
                 });
                 
                 // select box label
-                List<WebElement> list = this.driver.findElements(By.cssSelector(".selectbox-label"));
+                List<WebElement> list = driver.findElements(By.cssSelector(".selectbox-label"));
                 // 옵션 리스트
                 List<WebElement> selectOpt;
                 boolean click = false;
                 for (WebElement w : list) {
-                    // 마스크가 포함된 셀렉트박스를 찾아 클릭
-                    if (w.getText().contains("마스크")) {
+                    // selectText가  포함된 셀렉트박스를 찾아 클릭
+                    if (w.getText().contains("선택하세요") || w.getText().contains(selectText)) {
                         w.click();
                         // selectbox-source 여러개가 있으나 제일 처음나오는것이 상품의 옵션임
-                        WebElement w1 = this.driver.findElements(By.cssSelector(".selectbox-source")).get(0);
+                        WebElement w1 = driver.findElements(By.cssSelector(".selectbox-source")).get(0);
                         if (w1.getAttribute("title").equals("옵션 선택")) {
                             // 옵션 태그를 찾아 리스트 구성
                             selectOpt = w1.findElements(By.cssSelector("option"));
@@ -266,7 +287,7 @@ public class SeleniumController {
 
                             // 맘에드는 옵션을 contains에 포함시킨다. (옵션리스트 순회)
                             for (WebElement i : selectOpt) {
-                                if (i.getText().contains(includeText) && !i.getText().contains(exceptText)) {
+                                if (i.getText().contains(containText) && !i.getText().contains(exceptText)) {
                                     soldout = false;
                                     click = true;
                                     // 옵션 선택

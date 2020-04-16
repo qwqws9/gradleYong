@@ -18,11 +18,7 @@
     <input type="text" id="boardSearchKeyword" placeholder="검색..." value="${searchKeyword }"/>
     <ul class="nav nav-list">
 	    <li>
-	    	<a href="/localTest" class="btn btn-large btn-success">로컬 테스트용</a>
-	        <hr>
-	    </li>
-	    <li>
-	    	<a href="/mask" class="btn btn-large btn-success">미마 9:00</a>
+	    	<a href="/maskInfo2" class="btn btn-large btn-success">로컬 테스트용</a>
 	        <hr>
 	    </li>
 	    <li>
@@ -30,9 +26,21 @@
 	    	<hr>
 	    </li>
 	    <li>
-	    	<a href="/mask3" class="btn btn-large btn-info">걸리버 인쇄 13:00</a>
+	    	<a href="/mask5" class="btn btn-large btn-danger">샤인웰 10:00</a>
 	    	<hr>
 	    </li>
+	    <li>
+	    	<a href="/mask" class="btn btn-large btn-success">엔에이웰 16:00</a>
+	        <hr>
+	    </li>
+<!-- 	    <li> -->
+<!-- 	    	<a href="/mask4" class="btn btn-large btn-info">뉴네</a> -->
+<!-- 	    	<hr> -->
+<!-- 	    </li> -->
+<!-- 	    <li> -->
+<!-- 	    	<a href="/mask3" class="btn btn-large btn-info">걸리버 인쇄 13:00</a> -->
+<!-- 	    	<hr> -->
+<!-- 	    </li> -->
 	    <li>
 	    	<a href="/maskDrpuri1" class="btn btn-large btn-danger">닥터퓨리 번들</a>
 	    	<hr>
