@@ -53,6 +53,7 @@ import yong.service.UserService;
 public class OpenApiController extends BaseController {
     
     private static final String DUNDAM = "http://dundam.xyz/";
+    private static final String DUNTOKI = "http://duntoki.xyz/";
     private String URL;
     private static Map<String, String> SERVER;
     
@@ -273,6 +274,61 @@ public class OpenApiController extends BaseController {
         
         return sb.toString();
     }
+    
+    @RequestMapping("/duntoki/{server}")
+    @ResponseBody
+    public String duntoki(@PathVariable String server, @RequestParam String name) throws UnsupportedEncodingException {
+        
+        if(!SERVER.containsKey(server)) {
+            return "서버명을 확인해주세요.";
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        
+        try {
+            Document doc = null;
+            
+            
+            this.URL = DUNTOKI + "giraffe?serverNm="+server+"&charNm="+name;
+            doc = Jsoup.connect(URL).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+            if (doc.text().indexOf("존재하지 않는 캐릭터") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요.";}
+            
+            sb.append("[" + server + " / " + name + "] *emrms*");
+            sb.append("------------------------------"); sb.append("*emrms*");
+            String a1 = doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(6) > tbody > tr > td:nth-child(1) > font").text(); // 기린점수
+            String a2 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(6) > tbody > tr > td:nth-child(2) > font").text(); // 변동사항
+            String a3 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(12) > tbody > tr > td:nth-child(1) > font").text(); // 첫 신화
+            String a4 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(12) > tbody > tr > td:nth-child(2) > font").text(); // 신화 갯수
+            String a5 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(12) > tbody > tr > td:nth-child(3) > font").text(); // 산물
+            String a6 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(14) > tbody > tr > td:nth-child(3) > font").text(); // 잔향
+            String a7 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(14) > tbody > tr > td:nth-child(2) > font").text(); // 시로코 골카
+            String a8 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(14) > tbody > tr > td:nth-child(1) > font").text(); // 에픽도감 달성률
+            String a9 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(16) > tbody > tr > td:nth-child(1) > font").text(); // 던생 최고의날
+            String a10 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(16) > tbody > tr > td:nth-child(2) > font").text(); // 최고의날 획득 개수
+            
+            sb.append("기린점수 : " + a1); sb.append("*emrms*");
+            sb.append(a2); sb.append("*emrms*");
+            sb.append("첫 신화 : " + a3); sb.append("*emrms*");
+            if (a4.indexOf("0") != -1) {
+                sb.append("획득한 신화 : " + a4); sb.append("*emrms*");
+            }
+            sb.append("획득한 산물 : " + a5); sb.append("*emrms*");
+            sb.append("잔향 획득여부 : " + a6); sb.append("*emrms*");
+            sb.append("시로코 골카 : " + a7); sb.append("*emrms*");
+            sb.append("던생 최고의 날 : " + a9); sb.append("*emrms*");
+            sb.append("획득한 에픽 수 : " + a10); sb.append("*emrms*");
+            sb.append("------------------------------"); sb.append("*emrms*");
+            sb.append("에픽도감 달성률 : " + a8); sb.append("*emrms*");
+            sb.append("------------------------------");
+        } catch(Exception e) {
+            return "조회 실패! *emrms* 관리자에게 문의주세요.";
+        }
+        
+        return sb.toString();
+    }
+    
+    
+    
     
     public String replaceStr(String str) {
         Map<String,String> map = new HashMap<String, String>();
