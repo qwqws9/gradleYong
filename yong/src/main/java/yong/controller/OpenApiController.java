@@ -154,12 +154,12 @@ public class OpenApiController extends BaseController {
 //        System.out.println(name);
 //        name = replaceStr(name);
 //        System.out.println(name);
-        int abc = 1;
-        String test = URLEncoder.encode(name, "UTF-8");
-        if (abc == 1) {
-            return name + " : " + test;
-        }
-        System.out.println(name);
+//        int abc = 1;
+        name = URLEncoder.encode(name, "UTF-8");
+//        if (abc == 1) {
+//            return name + " : " + test;
+//        }
+//        System.out.println(name);
         try {
             String engServer = null;
             String deserver = URLDecoder.decode(server, "UTF-8");
