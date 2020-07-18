@@ -5,13 +5,10 @@
 
 <html>
 <head>
-<meta property="og:title" content="test"/>
-<meta property="og:type" content="article"/>
-<meta property="og:url" content="http://rootree.net"/>
-<meta property="og:description" content="This is a description."/>
-<meta property="og:image" content="https://grafolio.naver.com/works/877512"/>
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="627" />
+<meta property="og:url"                content="http://104.196.235.254/test/image" />
+<meta property="og:title"              content="When Great Minds Don’t Think Alike" />
+<meta property="og:description"        content="How much does culture influence creative thinking?" />
+<meta property="og:image"              content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg" />
 <title>Insert title here</title>
 </head>
 <body>
