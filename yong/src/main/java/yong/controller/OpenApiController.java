@@ -304,7 +304,7 @@ public class OpenApiController extends BaseController {
             sb.append("기린점수 : " + a1); sb.append("*emrms*");
             sb.append(a2); sb.append("*emrms*");
             sb.append("첫 신화 : " + a3); sb.append("*emrms*");
-            if (a4.indexOf("0") != -1) {
+            if (a4.indexOf("0") == -1) {
                 sb.append("획득한 신화 : " + a4); sb.append("*emrms*");
             }
             sb.append("획득한 산물 : " + a5); sb.append("*emrms*");
