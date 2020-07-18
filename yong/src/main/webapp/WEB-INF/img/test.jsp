@@ -8,7 +8,7 @@
 
 <html>
 <head>
-<meta property="og:url"                content="http://104.196.235.254/test/image" />
+<meta property="og:url"                content="http://104.196.235.254/?imgPath=${imgPath }" />
 <meta property="og:title"              content="When Great Minds Don’t Think Alike" />
 <meta property="og:description"        content="How much does culture influence creative thinking?" />
 <meta property="og:image"              content="http://104.196.235.254/resources/img/upload/${imgPath }" />
