@@ -176,27 +176,71 @@ public class OpenApiController extends BaseController {
             }
             
             doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
-            String send = doc.select("#sendbag > table > tbody > tr:nth-child(14) > td").text(); // 샌드백
-            String rogen = doc.select("#rogen > table > tbody > tr:nth-child(14) > td:nth-child(3)").text(); // 로젠 1시
-            String siroco = doc.select("#siroco > table > tbody > tr:nth-child(14) > td:nth-child(3)").text(); // 시로코 1시
-            String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
-            sb.setLength(0);
-            sb.append(server + " / " + dename + "*emrms*");
-            String[] infoArr = info.split("/");
-            sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
-            sb.append("&lt;샌드백&gt;");
-            sb.append("*emrms*");
-            sb.append(send);
-            sb.append("*emrms*");
-            sb.append("&lt;로젠 1시&gt;");
-            sb.append("*emrms*");
-            sb.append(rogen);
-            sb.append("*emrms*");
-            sb.append("&lt;시로코 1시&gt;");
-            sb.append("*emrms*");
-            sb.append(siroco);
-            sb.append("*emrms*");
             
+            String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
+            
+            if (doc.text().indexOf("버프 계산") > -1) {
+                String[] infoArr = info.split("/");
+                String locA = "5";
+                String locB = "5";
+                String locC = "9";
+                if (infoArr[1].indexOf("眞 크루세이더") > -1) {
+                    locA = "6";
+                    locB = "6";
+                    locC = "11";
+                } 
+                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(2)
+                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(4)
+                // #Present > table > tbody > tr:nth-child(11) > td
+                
+                // 세라핌 헤카테
+                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(2)
+                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(4)
+                // #Present > table > tbody > tr:nth-child(9) > td
+                
+                //doc.select("#myTab > li.active > a"); // 버프캐릭 확인용
+                String a = doc.select("#Present > table > tbody > tr:nth-child("+locA+") > td:nth-child(2)").text(); // 힘 지능
+                String b = doc.select("#Present > table > tbody > tr:nth-child("+locB+") > td:nth-child(4)").text(); // 물마독
+                String c = doc.select("#Present > table > tbody > tr:nth-child("+locC+") > td").text(); // 버프 점수
+                sb.setLength(0);
+                
+                sb.append(server + " / " + dename + "*emrms*");
+               
+                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
+                sb.append("------------------------------");
+                sb.append("*emrms*");
+                sb.append("힘/지능  : " + a);
+                sb.append("*emrms*");
+                sb.append("물마독   : " + b);
+                sb.append("*emrms*");
+                sb.append("버프점수 : " + c);
+                sb.append("*emrms*");
+                sb.append("------------------------------");
+                
+            } else {
+                String send = doc.select("#sendbag > table > tbody > tr:nth-child(14) > td").text(); // 샌드백
+                String rogen = doc.select("#rogen > table > tbody > tr:nth-child(14) > td:nth-child(3)").text(); // 로젠 1시
+                String siroco = doc.select("#siroco > table > tbody > tr:nth-child(14) > td:nth-child(3)").text(); // 시로코 1시
+                
+                sb.setLength(0);
+                sb.append(server + " / " + dename + "*emrms*");
+                String[] infoArr = info.split("/");
+                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
+                sb.append("------------------------------");
+                sb.append("*emrms*");
+                sb.append("&lt;샌드백&gt;");
+                sb.append("*emrms*");
+                sb.append(send);
+                sb.append("*emrms*");
+                sb.append("&lt;로젠 1시&gt;");
+                sb.append("*emrms*");
+                sb.append(rogen);
+                sb.append("*emrms*");
+                sb.append("&lt;시로코 1시&gt;");
+                sb.append("*emrms*");
+                sb.append(siroco);
+                sb.append("------------------------------");
+            }
             
         } catch (IOException e) {
             return "조회 실패! \n 관리자에게 문의주세요.";
