@@ -1,23 +1,26 @@
 package yong.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,18 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
-import yong.annotation.AccessUser;
-import yong.common.Const;
 import yong.common.Result;
-import yong.dto.BoardDto;
-import yong.dto.CommentDto;
-import yong.dto.UserDto;
-import yong.exception.BadRequestException;
-import yong.service.BoardService;
-import yong.service.CommentService;
-import yong.service.CtgService;
 import yong.service.OpenApiService;
-import yong.service.UserService;
 
 
 /**
@@ -54,7 +47,9 @@ public class OpenApiController extends BaseController {
     
     private static final String DUNDAM = "http://dundam.xyz/";
     private static final String DUNTOKI = "http://duntoki.xyz/";
-    private String URL;
+    private static final String NEOPLE = "https://api.neople.co.kr/df/servers/";
+    private static final String API_KEY = "NZsA1lAqj64UpeGK1XQxEfUU3PZUWOmw";
+    private String defaultUrl;
     private static Map<String, String> SERVER;
     
     static {
@@ -167,8 +162,8 @@ public class OpenApiController extends BaseController {
                 return "서버명을 확인해주세요.";
             }
             
-            this.URL = DUNDAM + "searchActionTest.jsp?server="+engServer+"&name="+name;
-            doc = Jsoup.connect(URL).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+engServer+"&name="+name;
+            doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
         
             if (doc.text().indexOf("점검중") > -1) { return "현재 점검중 입니다."; }
             if (doc.text().indexOf("없습니다.") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요."; }
@@ -289,8 +284,8 @@ public class OpenApiController extends BaseController {
             Document doc = null;
             
             
-            this.URL = DUNTOKI + "giraffe?serverNm="+server+"&charNm="+name;
-            doc = Jsoup.connect(URL).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+            this.defaultUrl = DUNTOKI + "giraffe?serverNm="+server+"&charNm="+name;
+            doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
             if (doc.text().indexOf("존재하지 않는 캐릭터") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요.";}
             
             sb.append("[" + server + " / " + name + "] *emrms*");
@@ -326,6 +321,163 @@ public class OpenApiController extends BaseController {
         
         return sb.toString();
     }
+    
+
+    @RequestMapping("/neople/equip/{server}")
+    @ResponseBody
+    public String neopleApi(@PathVariable String server, @RequestParam String name) throws UnsupportedEncodingException {
+        
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            if (SERVER.containsKey(server)) {
+                server = SERVER.get(server);
+            } else {
+                return "서버명을 확인해주세요.";
+            }
+            
+            String chcId = this.getCharacterId(server,name);
+            if ("x".equals(chcId)) { return "존재하지 않는 캐릭터 입니다."; }
+            
+            URL url = new URL(NEOPLE + server +"/characters/"+ chcId +"/equip/equipment?apikey="+API_KEY);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            
+            conn.setRequestMethod("GET");
+            
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            
+            String line;
+            while((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            
+            JSONParser parse = new JSONParser();
+            JSONObject obj = (JSONObject)parse.parse(sb.toString());
+            sb.setLength(0);
+            sb.append(name +" 의 정보.."); sb.append("*emrms*");sb.append("*emrms*");sb.append("*emrms*");
+            sb.append("길드명 : ");
+            sb.append(obj.get("guildName").toString()); sb.append("*emrms*"); // 길드명
+            sb.append("직업 : ");
+            sb.append(obj.get("jobGrowName").toString()); // 직업명
+            sb.append(" | ");
+            sb.append(obj.get("jobName").toString()); sb.append("*emrms*"); // 기초직업명
+            sb.append("모험단 명 : ");
+            sb.append(obj.get("adventureName").toString()); sb.append("*emrms*"); // 모험단 명
+            
+            // 장착 장비 세팅
+            JSONArray jsonArr = (JSONArray) obj.get("equipment");
+            for (int i = 0; i < jsonArr.size(); i++) {
+                JSONObject tempObj = (JSONObject) jsonArr.get(i);
+                sb.append(tempObj.get("slotName").toString()); // 타입
+                sb.append(" : ");
+                sb.append(tempObj.get("itemName")); // 이름
+                sb.append("( +");
+                sb.append(tempObj.get("reinforce")); // 강화/증폭 수치
+                sb.append(" ");
+                sb.append(tempObj.get("amplificationName") == null ? " 강화" : tempObj.get("amplificationName").toString());// 증폭 명
+                if ("무기".equals(tempObj.get("slotName").toString())) { sb.append(" / "+tempObj.get("refine") + " 재련"); } // 재련
+                sb.append(" )");
+                sb.append("*emrms*");
+                if (tempObj.containsKey("enchant")) {
+                    JSONObject tempObj2 = (JSONObject) tempObj.get("enchant");
+                    JSONArray jr = (JSONArray) tempObj2.get("status");
+                    sb.append("[ ");
+                    for (int j = 0; j < jr.size(); j++) {
+                        JSONObject enchantObj = (JSONObject) jr.get(j);
+                        sb.append(enchantObj.get("name").toString()); // 마부 명
+                        sb.append(enchantObj.get("value").toString()); // 마부 수치
+                        if (j != jr.size()) { sb.append(" / "); }
+                    }
+                    sb.append(" ]");
+                } else {
+                    sb.append("[ 마부 없음.. ]");
+                }
+                sb.append("*emrms*");
+                sb.append("*emrms*");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    
+                }
+            }
+        }
+        
+        return sb.toString();
+    }
+    
+    // 던파 API 인코딩 메서드
+    public String encodeURIComponent(String component)   {     
+        String result = null;      
+
+        try {       
+            result = URLEncoder.encode(component, "UTF-8");
+        } catch (Exception e) {       
+            result = component;     
+        }      
+
+        return result;   
+    }
+    
+    // 캐릭터 고유 아이디 조회
+    public String getCharacterId(String server, String name) {
+        
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        
+        try {
+            
+            name = this.encodeURIComponent(name);
+            
+            String a = NEOPLE + server + "/characters?characterName="+ name +"&limit=10&wordType=match&apikey="+ API_KEY;
+            
+            URL url = new URL(a);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            
+            conn.setRequestMethod("GET");
+            
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            
+            String line;
+            while((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            
+            JSONParser parse = new JSONParser();
+            JSONObject obj = (JSONObject)parse.parse(sb.toString());
+            JSONArray jsonArr = (JSONArray) obj.get("rows");
+            if(!obj.get("rows").toString().trim().equals("[]")) {
+                obj = (JSONObject) jsonArr.get(0);
+                sb.setLength(0);
+                sb.append(obj.get("characterId").toString());
+            } else {
+                sb.setLength(0);
+                return "x";
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    
+                }
+            }
+        }
+        
+        
+        
+        return sb.toString();
+    }
+    
+    
     
     
     
