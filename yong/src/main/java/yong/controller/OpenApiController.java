@@ -10,6 +10,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -260,15 +261,15 @@ public class OpenApiController extends BaseController {
                 sb.append("*emrms*");
                 sb.append("&lt;샌드백&gt;");
                 sb.append("*emrms*");
-                sb.append(send);
+                sb.append(numberToKorean(send));
                 sb.append("*emrms*");
                 sb.append("&lt;로젠 1시&gt;");
                 sb.append("*emrms*");
-                sb.append(rogen);
+                sb.append(numberToKorean(rogen));
                 sb.append("*emrms*");
                 sb.append("&lt;시로코 1시&gt;");
                 sb.append("*emrms*");
-                sb.append(siroco);
+                sb.append(numberToKorean(siroco));
                 sb.append("*emrms*");
                 sb.append("------------------------------");
             }
@@ -487,6 +488,30 @@ public class OpenApiController extends BaseController {
         return sb.toString();
     }
     
+    public static String numberToKorean(String number){
+        number = number.replaceAll(",", "");
+        String[] unitWords    = {"만", "억", "조", "경"};
+
+        Stack<String> stack = new Stack<String>();
+        int count = 0;
+        int count2 = 0;
+        for (int i = number.length()-1; i >= 0; i--) {
+            
+            stack.push(number.charAt(i)+"");
+            count2++;
+            if (count2 % 4 == 0 && i != 0) {
+                stack.push(unitWords[count]);
+                count++;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        
+        while(!stack.empty()) {
+            sb.append(stack.pop());
+        }
+        
+        return sb.toString();
+    }
     
     
     
