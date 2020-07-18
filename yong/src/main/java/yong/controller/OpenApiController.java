@@ -181,21 +181,21 @@ public class OpenApiController extends BaseController {
             String siroco = doc.select("#siroco > table > tbody > tr:nth-child(14) > td:nth-child(3)").text(); // 시로코 1시
             String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
             sb.setLength(0);
-            sb.append(server + " / " + dename + "\r\n");
+            sb.append(server + " / " + dename + "*emrms*");
             String[] infoArr = info.split("/");
-            sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "\r\n");
+            sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
             sb.append("&lt;샌드백&gt;");
-            sb.append("\r\n");
+            sb.append("*emrms*");
             sb.append(send);
-            sb.append("\r\n");
+            sb.append("*emrms*");
             sb.append("&lt;로젠 1시&gt;");
-            sb.append("\r\n");
+            sb.append("*emrms*");
             sb.append(rogen);
-            sb.append("\r\n");
+            sb.append("*emrms*");
             sb.append("&lt;시로코 1시&gt;");
-            sb.append("\r\n");
+            sb.append("*emrms*");
             sb.append(siroco);
-            sb.append("\r\n");
+            sb.append("*emrms*");
             
             
         } catch (IOException e) {
