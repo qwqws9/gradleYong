@@ -164,7 +164,7 @@ public class OpenApiController extends BaseController {
             doc = Jsoup.connect(URL).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
         
             if (doc.text().indexOf("점검중") > -1) { return "현재 점검중 입니다."; }
-            if (doc.text().indexOf("없습니다.") > -1) { return "검색결과가 없습니다.\n 아이디를 확인해주세요."; }
+            if (doc.text().indexOf("없습니다.") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요."; }
             
             Elements e = doc.select("#equipment > tbody > tr:nth-child(1) > td:nth-child(1) > div.image_cut > a");
             
@@ -239,11 +239,12 @@ public class OpenApiController extends BaseController {
                 sb.append("&lt;시로코 1시&gt;");
                 sb.append("*emrms*");
                 sb.append(siroco);
+                sb.append("*emrms*");
                 sb.append("------------------------------");
             }
             
         } catch (IOException e) {
-            return "조회 실패! \n 관리자에게 문의주세요.";
+            return "조회 실패! *emrms* 관리자에게 문의주세요.";
         }
         
         return sb.toString();
