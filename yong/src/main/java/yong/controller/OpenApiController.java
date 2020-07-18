@@ -1,7 +1,13 @@
 package yong.controller;
 
+import java.io.IOException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -85,5 +91,29 @@ public class OpenApiController extends BaseController {
         mv.setViewName("/openApi/naverMap2");
         
         return mv;
+    }
+    
+    @RequestMapping("/aaa/bbbb")
+    @ResponseBody
+    public String test() {
+        Document a = null;
+        
+        try {
+             a = Jsoup.connect("http://dundam.xyz/searchActionTest.jsp?server=all&name=%EC%94%A8%EB%A6%AC%EC%95%BC").userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36").validateTLSCertificates(false).get();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        Elements e = a.select("b");
+        
+        StringBuilder sb = new StringBuilder();
+        
+        for (Element b : e) {
+            sb.append(b.text());
+        }
+
+        //return new Result(sb.toString());
+        return sb.toString();
     }
 }

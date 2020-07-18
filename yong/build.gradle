@@ -62,6 +62,8 @@ dependencies {
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+	compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
     
     
     
