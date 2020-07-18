@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -147,12 +148,18 @@ public class OpenApiController extends BaseController {
         Document doc = null;
         StringBuilder sb = new StringBuilder();
         
+//        System.out.println(name);
+//        name = replaceStr(name);
+//        System.out.println(name);
+        
+        
         try {
             String engServer = null;
             String deserver = URLDecoder.decode(server, "UTF-8");
             String dename = URLDecoder.decode(name, "UTF-8");
-            System.out.println("!!!!!!" + server);
-            System.out.println("!!!!!!" + deserver);
+            System.out.println(server + " : " + deserver);
+            System.out.println(name + " : " + dename);
+            
             
             if (SERVER.containsKey(deserver)) {
                 engServer = SERVER.get(deserver);
@@ -218,9 +225,27 @@ public class OpenApiController extends BaseController {
                 sb.append("------------------------------");
                 
             } else {
-                String send = doc.select("#sendbag > table > tbody > tr:nth-child(14) > td").text(); // 샌드백
-                String rogen = doc.select("#rogen > table > tbody > tr:nth-child(14) > td:nth-child(3)").text(); // 로젠 1시
-                String siroco = doc.select("#siroco > table > tbody > tr:nth-child(14) > td:nth-child(3)").text(); // 시로코 1시
+                String send = ""; // 샌드백
+                String rogen = ""; // 로젠 1시
+                String siroco = ""; // 시로코 1시
+                
+                Elements AAA = doc.select("#rogen > table > tbody > tr"); // 로젠 1시
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    rogen = ele.select("td:nth-child(3)").text();
+                }
+                
+                AAA = doc.select("#sendbag > table > tbody > tr");
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    send = ele.select("td:nth-child(2)").text();
+                }
+                
+                AAA = doc.select("#siroco > table > tbody > tr");
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    siroco = ele.select("td:nth-child(3)").text();
+                }
                 
                 sb.setLength(0);
                 sb.append(server + " / " + dename + "*emrms*");
@@ -248,5 +273,181 @@ public class OpenApiController extends BaseController {
         }
         
         return sb.toString();
+    }
+    
+    @RequestMapping("/dundam/damage/{server}")
+    @ResponseBody
+    public String dundamDamage1(@PathVariable String server,String name) {
+        Document doc = null;
+        StringBuilder sb = new StringBuilder();
+        
+//        System.out.println(name);
+//        name = replaceStr(name);
+//        System.out.println(name);
+        
+        
+        try {
+            String engServer = null;
+            String deserver = URLDecoder.decode(server, "UTF-8");
+            String dename = URLDecoder.decode(name, "UTF-8");
+            System.out.println(server + " : " + deserver);
+            System.out.println(name + " : " + dename);
+            
+            
+            if (SERVER.containsKey(deserver)) {
+                engServer = SERVER.get(deserver);
+            } else {
+                return "서버명을 확인해주세요.";
+            }
+            
+            this.URL = DUNDAM + "searchActionTest.jsp?server="+engServer+"&name="+name;
+            doc = Jsoup.connect(URL).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+        
+            if (doc.text().indexOf("점검중") > -1) { return "현재 점검중 입니다."; }
+            if (doc.text().indexOf("없습니다.") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요."; }
+            
+            Elements e = doc.select("#equipment > tbody > tr:nth-child(1) > td:nth-child(1) > div.image_cut > a");
+            
+            for (Element b : e) {
+                System.out.println(b);
+                if (b.attr("href").indexOf("view.jsp") == -1) { continue; }
+                sb.append(DUNDAM);
+                sb.append(b.attr("href"));
+            }
+            
+            doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+            
+            String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
+            
+            if (doc.text().indexOf("버프 계산") > -1) {
+                String[] infoArr = info.split("/");
+                String locA = "5";
+                String locB = "5";
+                String locC = "9";
+                if (infoArr[1].indexOf("眞 크루세이더") > -1) {
+                    locA = "6";
+                    locB = "6";
+                    locC = "11";
+                } 
+                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(2)
+                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(4)
+                // #Present > table > tbody > tr:nth-child(11) > td
+                
+                // 세라핌 헤카테
+                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(2)
+                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(4)
+                // #Present > table > tbody > tr:nth-child(9) > td
+                
+                //doc.select("#myTab > li.active > a"); // 버프캐릭 확인용
+                String a = doc.select("#Present > table > tbody > tr:nth-child("+locA+") > td:nth-child(2)").text(); // 힘 지능
+                String b = doc.select("#Present > table > tbody > tr:nth-child("+locB+") > td:nth-child(4)").text(); // 물마독
+                String c = doc.select("#Present > table > tbody > tr:nth-child("+locC+") > td").text(); // 버프 점수
+                sb.setLength(0);
+                
+                sb.append(server + " / " + dename + "*emrms*");
+               
+                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
+                sb.append("------------------------------");
+                sb.append("*emrms*");
+                sb.append("힘/지능  : " + a);
+                sb.append("*emrms*");
+                sb.append("물마독   : " + b);
+                sb.append("*emrms*");
+                sb.append("버프점수 : " + c);
+                sb.append("*emrms*");
+                sb.append("------------------------------");
+                
+            } else {
+                String send = ""; // 샌드백
+                String rogen = ""; // 로젠 1시
+                String siroco = ""; // 시로코 1시
+                
+                Elements AAA = doc.select("#rogen > table > tbody > tr"); // 로젠 1시
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    rogen = ele.select("td:nth-child(3)").text();
+                }
+                
+                AAA = doc.select("#sendbag > table > tbody > tr");
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    send = ele.select("td:nth-child(2)").text();
+                }
+                
+                AAA = doc.select("#siroco > table > tbody > tr");
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    siroco = ele.select("td:nth-child(3)").text();
+                }
+                
+                sb.setLength(0);
+                sb.append(server + " / " + dename + "*emrms*");
+                String[] infoArr = info.split("/");
+                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
+                sb.append("------------------------------");
+                sb.append("*emrms*");
+                sb.append("&lt;샌드백&gt;");
+                sb.append("*emrms*");
+                sb.append(send);
+                sb.append("*emrms*");
+                sb.append("&lt;로젠 1시&gt;");
+                sb.append("*emrms*");
+                sb.append(rogen);
+                sb.append("*emrms*");
+                sb.append("&lt;시로코 1시&gt;");
+                sb.append("*emrms*");
+                sb.append(siroco);
+                sb.append("*emrms*");
+                sb.append("------------------------------");
+            }
+            
+        } catch (IOException e) {
+            return "조회 실패! *emrms* 관리자에게 문의주세요.";
+        }
+        
+        return sb.toString();
+    }
+    
+    public String replaceStr(String str) {
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("!",  "%21");
+        map.put("|",  "%7C");
+        map.put("\"", "%22");
+        map.put("#",  "%23"); 
+        map.put("$",  "%24"); 
+        map.put("%",  "%25"); 
+        map.put("&",  "%26"); 
+        map.put("(",  "%28"); 
+        map.put("}",  "%7D");
+        map.put("~",  "%7E");
+        map.put("￠", "%A2");
+        map.put("￡", "%A3");
+        map.put("￥", "%A5");
+        map.put(")" , "%29");
+        map.put("." ,  "%2E");
+        map.put("/" ,  "%2F");
+        map.put(":" ,  "%3A");
+        map.put(";" ,  "%3B");
+        map.put("<" ,  "%3C");
+        map.put(">" ,  "%3E");
+        map.put("=" ,  "%3D");
+        map.put("?" ,  "%3F");
+        map.put("@" ,  "%40");
+        map.put("[" ,  "%5B");
+        map.put("\\" , "%5C");
+        map.put("]" ,  "%5D");
+        map.put("`" ,  "%60");
+        map.put("^" ,  "%5E");
+        map.put("_" ,  "%5F");
+        
+        for (String key : map.keySet()) {
+            if (str.contains(key)) {
+                System.out.println(str);
+                str = str.replaceAll(key, map.get(key));
+                System.out.println(str);
+            }
+        }
+
+        return str;
     }
 }
