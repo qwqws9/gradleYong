@@ -49,15 +49,22 @@ public class CommonController {
      * @param board
      * @return
      */
+//    @RequestMapping("/")
+//    public ModelAndView index(BoardDto board) {
+//        ModelAndView mv = new ModelAndView();
+//        board.setStartNum(0);
+//        board.setPageCount(Const.pageCount);
+//
+//        mv.addObject("list", this.boardService.boardList(board));
+//        mv.setViewName("/index");
+//
+//        return mv;
+//    }
     @RequestMapping("/")
-    public ModelAndView index(BoardDto board) {
+    public ModelAndView index() {
         ModelAndView mv = new ModelAndView();
-        board.setStartNum(0);
-        board.setPageCount(Const.pageCount);
-
-        mv.addObject("list", this.boardService.boardList(board));
-        mv.setViewName("/index");
-
+        mv.setViewName("/img/test");
+        
         return mv;
     }
 
