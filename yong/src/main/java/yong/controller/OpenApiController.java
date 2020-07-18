@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -142,150 +143,15 @@ public class OpenApiController extends BaseController {
      * 던담 대미지 조회
      * @return
      */
-    @RequestMapping("/dundam/damage/{server}/{name}")
-    @ResponseBody
-    public String dundamDamage(@PathVariable String server, @PathVariable String name) {
-        Document doc = null;
-        StringBuilder sb = new StringBuilder();
-        
-//        System.out.println(name);
-//        name = replaceStr(name);
-//        System.out.println(name);
-        
-        
-        try {
-            String engServer = null;
-            String deserver = URLDecoder.decode(server, "UTF-8");
-            String dename = URLDecoder.decode(name, "UTF-8");
-            System.out.println(server + " : " + deserver);
-            System.out.println(name + " : " + dename);
-            
-            
-            if (SERVER.containsKey(deserver)) {
-                engServer = SERVER.get(deserver);
-            } else {
-                return "서버명을 확인해주세요.";
-            }
-            
-            this.URL = DUNDAM + "searchActionTest.jsp?server="+engServer+"&name="+name;
-            doc = Jsoup.connect(URL).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
-        
-            if (doc.text().indexOf("점검중") > -1) { return "현재 점검중 입니다."; }
-            if (doc.text().indexOf("없습니다.") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요."; }
-            
-            Elements e = doc.select("#equipment > tbody > tr:nth-child(1) > td:nth-child(1) > div.image_cut > a");
-            
-            for (Element b : e) {
-                System.out.println(b);
-                if (b.attr("href").indexOf("view.jsp") == -1) { continue; }
-                sb.append(DUNDAM);
-                sb.append(b.attr("href"));
-            }
-            
-            doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
-            
-            String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
-            
-            if (doc.text().indexOf("버프 계산") > -1) {
-                String[] infoArr = info.split("/");
-                String locA = "5";
-                String locB = "5";
-                String locC = "9";
-                if (infoArr[1].indexOf("眞 크루세이더") > -1) {
-                    locA = "6";
-                    locB = "6";
-                    locC = "11";
-                } 
-                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(2)
-                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(4)
-                // #Present > table > tbody > tr:nth-child(11) > td
-                
-                // 세라핌 헤카테
-                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(2)
-                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(4)
-                // #Present > table > tbody > tr:nth-child(9) > td
-                
-                //doc.select("#myTab > li.active > a"); // 버프캐릭 확인용
-                String a = doc.select("#Present > table > tbody > tr:nth-child("+locA+") > td:nth-child(2)").text(); // 힘 지능
-                String b = doc.select("#Present > table > tbody > tr:nth-child("+locB+") > td:nth-child(4)").text(); // 물마독
-                String c = doc.select("#Present > table > tbody > tr:nth-child("+locC+") > td").text(); // 버프 점수
-                sb.setLength(0);
-                
-                sb.append(server + " / " + dename + "*emrms*");
-               
-                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
-                sb.append("------------------------------");
-                sb.append("*emrms*");
-                sb.append("힘/지능  : " + a);
-                sb.append("*emrms*");
-                sb.append("물마독   : " + b);
-                sb.append("*emrms*");
-                sb.append("버프점수 : " + c);
-                sb.append("*emrms*");
-                sb.append("------------------------------");
-                
-            } else {
-                String send = ""; // 샌드백
-                String rogen = ""; // 로젠 1시
-                String siroco = ""; // 시로코 1시
-                
-                Elements AAA = doc.select("#rogen > table > tbody > tr"); // 로젠 1시
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    rogen = ele.select("td:nth-child(3)").text();
-                }
-                
-                AAA = doc.select("#sendbag > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    send = ele.select("td:nth-child(2)").text();
-                }
-                
-                AAA = doc.select("#siroco > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    siroco = ele.select("td:nth-child(3)").text();
-                }
-                
-                sb.setLength(0);
-                sb.append(server + " / " + dename + "*emrms*");
-                String[] infoArr = info.split("/");
-                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
-                sb.append("------------------------------");
-                sb.append("*emrms*");
-                sb.append("&lt;샌드백&gt;");
-                sb.append("*emrms*");
-                sb.append(send);
-                sb.append("*emrms*");
-                sb.append("&lt;로젠 1시&gt;");
-                sb.append("*emrms*");
-                sb.append(rogen);
-                sb.append("*emrms*");
-                sb.append("&lt;시로코 1시&gt;");
-                sb.append("*emrms*");
-                sb.append(siroco);
-                sb.append("*emrms*");
-                sb.append("------------------------------");
-            }
-            
-        } catch (IOException e) {
-            return "조회 실패! *emrms* 관리자에게 문의주세요.";
-        }
-        
-        return sb.toString();
-    }
-    
     @RequestMapping("/dundam/damage/{server}")
     @ResponseBody
-    public String dundamDamage1(@PathVariable String server,String name) {
+    public String dundamDamage(@PathVariable String server, @RequestParam String name) {
         Document doc = null;
         StringBuilder sb = new StringBuilder();
-        
 //        System.out.println(name);
 //        name = replaceStr(name);
 //        System.out.println(name);
-        
-        
+        System.out.println(name);
         try {
             String engServer = null;
             String deserver = URLDecoder.decode(server, "UTF-8");
