@@ -1,7 +1,9 @@
 package yong.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -142,15 +144,21 @@ public class OpenApiController extends BaseController {
     /**
      * 던담 대미지 조회
      * @return
+     * @throws UnsupportedEncodingException 
      */
     @RequestMapping("/dundam/damage/{server}")
     @ResponseBody
-    public String dundamDamage(@PathVariable String server, @RequestParam String name) {
+    public String dundamDamage(@PathVariable String server, @RequestParam String name) throws UnsupportedEncodingException {
         Document doc = null;
         StringBuilder sb = new StringBuilder();
 //        System.out.println(name);
 //        name = replaceStr(name);
 //        System.out.println(name);
+        int abc = 1;
+        String test = URLEncoder.encode(name, "UTF-8");
+        if (abc == 1) {
+            return name + " : " + test;
+        }
         System.out.println(name);
         try {
             String engServer = null;
