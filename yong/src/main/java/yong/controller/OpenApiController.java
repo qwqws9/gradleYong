@@ -362,7 +362,7 @@ public class OpenApiController extends BaseController {
             sb.append(" | ");
             sb.append(obj.get("jobName").toString()); sb.append("*emrms*"); // 기초직업명
             sb.append("모험단 명 : ");
-            sb.append(obj.get("adventureName").toString()); sb.append("*emrms*"); // 모험단 명
+            sb.append(obj.get("adventureName").toString()); sb.append("*emrms*");sb.append("*emrms*"); // 모험단 명
             
             // 장착 장비 세팅
             JSONArray jsonArr = (JSONArray) obj.get("equipment");
@@ -371,7 +371,7 @@ public class OpenApiController extends BaseController {
                 sb.append(tempObj.get("slotName").toString()); // 타입
                 sb.append(" : ");
                 sb.append(tempObj.get("itemName")); // 이름
-                sb.append("( +");
+                sb.append(" ( +");
                 sb.append(tempObj.get("reinforce")); // 강화/증폭 수치
                 sb.append(" ");
                 sb.append(tempObj.get("amplificationName") == null ? " 강화" : tempObj.get("amplificationName").toString());// 증폭 명
@@ -386,7 +386,7 @@ public class OpenApiController extends BaseController {
                         JSONObject enchantObj = (JSONObject) jr.get(j);
                         sb.append(enchantObj.get("name").toString()); // 마부 명
                         sb.append(enchantObj.get("value").toString()); // 마부 수치
-                        if (j != jr.size()) { sb.append(" / "); }
+                        if (j != jr.size() -1 ) { sb.append(" / "); }
                     }
                     sb.append(" ]");
                 } else {
