@@ -151,15 +151,7 @@ public class OpenApiController extends BaseController {
     public String dundamDamage(@PathVariable String server, @RequestParam String name) throws UnsupportedEncodingException {
         Document doc = null;
         StringBuilder sb = new StringBuilder();
-//        System.out.println(name);
-//        name = replaceStr(name);
-//        System.out.println(name);
-//        int abc = 1;
-        name = URLEncoder.encode(name, "UTF-8");
-//        if (abc == 1) {
-//            return name + " : " + test;
-//        }
-//        System.out.println(name);
+        
         try {
             String engServer = null;
             String deserver = URLDecoder.decode(server, "UTF-8");
