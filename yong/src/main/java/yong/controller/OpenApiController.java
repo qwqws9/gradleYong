@@ -385,7 +385,7 @@ public class OpenApiController extends BaseController {
                     for (int j = 0; j < jr.size(); j++) {
                         JSONObject enchantObj = (JSONObject) jr.get(j);
                         sb.append(enchantObj.get("name").toString()); // 마부 명
-                        sb.append(enchantObj.get("value").toString()); // 마부 수치
+                        sb.append(" +"+enchantObj.get("value").toString()); // 마부 수치
                         if (j != jr.size() -1 ) { sb.append(" / "); }
                     }
                     sb.append(" ]");
