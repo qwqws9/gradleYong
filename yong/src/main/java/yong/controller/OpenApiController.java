@@ -67,6 +67,16 @@ public class OpenApiController extends BaseController {
     @Autowired
     private OpenApiService openApiService;
     
+    @RequestMapping("/test/image")
+    public ModelAndView getMuseumData1(ModelAndView mv) {
+        
+        mv.setViewName("/img/test");
+        
+        return mv;
+    }
+    
+    
+    
     @RequestMapping("/openApi/museumList")
     public ModelAndView getMuseumList(ModelAndView mv) {
 
