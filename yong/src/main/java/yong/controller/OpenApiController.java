@@ -520,7 +520,7 @@ public class OpenApiController extends BaseController {
             if(!obj.get("rows").toString().trim().equals("[]")) {
                 sb.setLength(0);
                 JSONArray arr = (JSONArray) obj.get("rows");
-                sb.append(itemName);
+                sb.append(itemName); sb.append("*emrms*");
                 sb.append("검색결과 총 :" + arr.size() + "개");
                 sb.append("*emrms*"); sb.append("*emrms*");
                 for (int i = 0; i < arr.size(); i++ ) {
