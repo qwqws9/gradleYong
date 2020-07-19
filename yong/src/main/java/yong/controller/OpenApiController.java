@@ -514,7 +514,7 @@ public class OpenApiController extends BaseController {
             while((line = br.readLine()) != null) {
                 sb.append(line);
             }
-            
+            System.out.println(sb.toString());
             JSONParser parse = new JSONParser();
             JSONObject obj = (JSONObject)parse.parse(sb.toString());
             if(!obj.get("rows").toString().trim().equals("[]")) {
