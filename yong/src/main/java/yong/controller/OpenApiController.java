@@ -48,7 +48,7 @@ public class OpenApiController extends BaseController {
     
     private static final String DUNDAM = "http://dundam.xyz/";
     private static final String DUNTOKI = "http://duntoki.xyz/";
-    private static final String NEOPLE = "https://api.neople.co.kr/df/servers/";
+    private static final String NEOPLE = "https://api.neople.co.kr/df/";
     private static final String API_KEY = "NZsA1lAqj64UpeGK1XQxEfUU3PZUWOmw";
     private String defaultUrl;
     private static Map<String, String> SERVER;
@@ -350,7 +350,7 @@ public class OpenApiController extends BaseController {
             String chcId = this.getCharacterId(server,name);
             if ("x".equals(chcId)) { return "존재하지 않는 캐릭터 입니다."; }
             
-            URL url = new URL(NEOPLE + server +"/characters/"+ chcId +"/equip/equipment?apikey="+API_KEY);
+            URL url = new URL(NEOPLE +"servers/" + server +"/characters/"+ chcId +"/equip/equipment?apikey="+API_KEY);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             
             conn.setRequestMethod("GET");
@@ -445,7 +445,7 @@ public class OpenApiController extends BaseController {
             
             name = this.encodeURIComponent(name);
             
-            String a = NEOPLE + server + "/characters?characterName="+ name +"&limit=10&wordType=match&apikey="+ API_KEY;
+            String a = NEOPLE + "servers/" + server + "/characters?characterName="+ name +"&limit=10&wordType=match&apikey="+ API_KEY;
             
             URL url = new URL(a);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -487,6 +487,82 @@ public class OpenApiController extends BaseController {
         
         return sb.toString();
     }
+    
+    // 아이템 검색
+    @RequestMapping("/neople/searchItem")
+    @ResponseBody
+    public String neopleApi2(@RequestParam String searchType, @RequestParam String itemName) throws UnsupportedEncodingException {
+        
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            
+            String encItemName = this.encodeURIComponent(itemName);
+            String itemId = "";
+            
+            // searchType : 1 아이템 검색용 // 2 : 경매장 검색용 ( 검색결과가 하나만 나와야함 )
+            String trade = searchType == "1" ? "true" : "false";
+            
+            URL url = new URL(NEOPLE + "items?itemName=" + encItemName +"&q=trade:" + trade + "&limit=200&wordType=front&apikey=" + API_KEY);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            
+            conn.setRequestMethod("GET");
+            
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            
+            String line;
+            while((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            
+            JSONParser parse = new JSONParser();
+            JSONObject obj = (JSONObject)parse.parse(sb.toString());
+            if(!obj.get("rows").toString().trim().equals("[]")) {
+                sb.setLength(0);
+                JSONArray arr = (JSONArray) obj.get("rows");
+                sb.append(itemName + " 의 검색결과 총 :" + arr.size() + "개");
+                sb.append("*emrms*"); sb.append("*emrms*");
+                for (int i = 0; i < arr.size(); i++ ) {
+                    JSONObject itemList = (JSONObject)arr.get(i);
+                    if (arr.size() == 1) { itemId = itemList.get("itemId").toString(); } // 한개만 검색되었을 경우에만 경매장 검색이동위해 처리
+                    
+                    sb.append(itemList.get("itemName").toString()); sb.append(" (");
+                    sb.append(itemList.get("itemRarity").toString()); sb.append(")"); sb.append("*emrms*");
+                    String itemType = itemList.get("itemType").toString(); // 타입
+                    if ("스태커블".equals(itemType)) {
+                        sb.append(itemList.get("itemTypeDetail").toString()); sb.append("*emrms*");
+                    } else {
+                        sb.append(itemType);
+                        sb.append(" - ");
+                        sb.append(itemList.get("itemTypeDetail").toString()); sb.append("*emrms*");
+                    }
+                    sb.append("사용가능레벨 : ");
+                    sb.append(itemList.get("itemAvailableLevel").toString()); sb.append("*emrms*");
+                    sb.append("*emrms*");
+                }
+                
+            } else {
+                sb.setLength(0);
+                return "검색결과가 없습니다.";
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    
+                }
+            }
+        }
+        
+        return sb.toString();
+    }
+    
+    
+    
     
     public static String numberToKorean(String number){
         number = number.replaceAll(",", "");
