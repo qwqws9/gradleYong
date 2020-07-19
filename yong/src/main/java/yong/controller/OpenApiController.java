@@ -520,7 +520,8 @@ public class OpenApiController extends BaseController {
             if(!obj.get("rows").toString().trim().equals("[]")) {
                 sb.setLength(0);
                 JSONArray arr = (JSONArray) obj.get("rows");
-                sb.append(itemName + " 의 검색결과 총 :" + arr.size() + "개");
+                sb.append(itemName);
+                sb.append("검색결과 총 :" + arr.size() + "개");
                 sb.append("*emrms*"); sb.append("*emrms*");
                 for (int i = 0; i < arr.size(); i++ ) {
                     JSONObject itemList = (JSONObject)arr.get(i);
@@ -537,8 +538,9 @@ public class OpenApiController extends BaseController {
                         sb.append(itemList.get("itemTypeDetail").toString()); sb.append("*emrms*");
                     }
                     sb.append("사용가능레벨 : ");
-                    sb.append(itemList.get("itemAvailableLevel").toString()); sb.append("*emrms*");
-                    sb.append("*emrms*");
+                    sb.append(itemList.get("itemAvailableLevel").toString()); 
+                    
+                    if (i != arr.size() -1) {sb.append("*emrms*"); sb.append("*emrms*");}
                 }
                 
             } else {
