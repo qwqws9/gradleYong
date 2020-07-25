@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -311,12 +312,21 @@ public class OpenApiController extends BaseController {
             String a8 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(14) > tbody > tr > td:nth-child(1) > font").text(); // 에픽도감 달성률
             String a9 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(16) > tbody > tr > td:nth-child(1) > font").text(); // 던생 최고의날
             String a10 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(16) > tbody > tr > td:nth-child(2) > font").text(); // 최고의날 획득 개수
+            String a11 = doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(10) > tbody > tr > td:nth-child(2) > font").text();
+            a11 = a11.split("개")[0];
+            int a12 = 0;
+            if (NumberUtils.isNumber(a11)) {
+                a12 = Integer.parseInt(a11) * 100;
+            }
             
             sb.append("기린점수 : " + a1); sb.append("*emrms*");
             sb.append(a2); sb.append("*emrms*");
             sb.append("첫 신화 : " + a3); sb.append("*emrms*");
             if (a4.indexOf("0") == -1) {
                 sb.append("획득한 신화 : " + a4); sb.append("*emrms*");
+            }
+            if (a12 != 0) {
+                sb.append("지혜의 인도 근사값 : " + a12); sb.append("*emrms*");
             }
             sb.append("획득한 산물 : " + a5); sb.append("*emrms*");
             sb.append("잔향 획득여부 : " + a6); sb.append("*emrms*");
