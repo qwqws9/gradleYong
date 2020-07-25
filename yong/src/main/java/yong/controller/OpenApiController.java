@@ -326,7 +326,7 @@ public class OpenApiController extends BaseController {
                 sb.append("획득한 신화 : " + a4); sb.append("*emrms*");
             }
             if (a12 != 0) {
-                sb.append("지혜의 인도 근사값 : " + a12); sb.append("*emrms*");
+                sb.append("지혜인도 근사값 : 약" + a12 + "회"); sb.append("*emrms*");
             }
             sb.append("획득한 산물 : " + a5); sb.append("*emrms*");
             sb.append("잔향 획득여부 : " + a6); sb.append("*emrms*");
