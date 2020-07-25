@@ -316,7 +316,7 @@ public class OpenApiController extends BaseController {
             a11 = a11.split("개")[0];
             int a12 = 0;
             if (NumberUtils.isNumber(a11)) {
-                a12 = Integer.parseInt(a11) * 100;
+                a12 = Integer.parseInt(a11) * 10;
             }
             
             sb.append("기린점수 : " + a1); sb.append("*emrms*");
