@@ -377,7 +377,7 @@ public class OpenApiController extends BaseController {
             
             
             imgObj.put("id", name);
-            imgObj.put("img", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ chcId + "zoom=1");
+            imgObj.put("img", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ chcId + "&zoom=1");
             
             JSONParser parse = new JSONParser();
             JSONObject obj = (JSONObject)parse.parse(sb.toString());

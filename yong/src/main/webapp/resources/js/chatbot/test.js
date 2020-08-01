@@ -14,7 +14,7 @@ Kakao.login('qwqws9@naver.com','gnfkqh12');
  * (string) packageName
  */
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
-  if (msg == "/테스트") {
+  if (msg.indexOf("/테스트") > -1) {
     //var u = Utils.getWebText("http://dundam.xyz/searchActionTest.jsp?server=cain&name=씨리야");
     //replier.reply(u);
 	  var msgArr = msg.split(' ');
@@ -29,7 +29,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 	  var server = json.server;
 	  var id = json.id;
 	  var img = json.img;
-	  
+	  replier.reply(json.server + ' : ' + json.id + ' : ' + json.img);
 	  Kakao.send(room, {
 		  link_ver: "4.0",
 		  template_id: 33605,
