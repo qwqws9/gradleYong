@@ -2,15 +2,14 @@ package yong.controller;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class SeleniumController {
-
+    
 //    private WebDriver driver;
 
     private static ChromeOptions option;
@@ -42,14 +41,14 @@ public class SeleniumController {
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
         option = new ChromeOptions();
-        option.addArguments("user-agent= Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36");
-        option.addArguments("disable-gpu");
+        option.addArguments("user-agent= Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36");
+//        option.addArguments("disable-gpu");
         // option.addArguments("headless");
     }
 
     /**
      * 
-     * 미마 마스크 졸업 // 엔에이웰
+     * 미마 마스크 졸업 // 금아 블랙
      *
      * @since 2020. 4. 9.
      * @author yong
@@ -58,11 +57,12 @@ public class SeleniumController {
      */
     @RequestMapping("/mask")
     public String mask() {
-        //엔에이웰
-        this.maskShopUrl ="https://smartstore.naver.com/pyeongpyoen/products/4690028600";
+        // 금아 블랙
+        this.maskShopUrl ="https://smartstore.naver.com/kumaelectron/products/4813999869";
         //미마
 //        this.maskShopUrl ="https://smartstore.naver.com/aseado/products/4837257765";
-        this.getMask("마스크","중형","품절");
+//        this.getMask("마스크","중형","품절");
+        this.getMaskNoOption();
 
         return "redirect:/";
     }
@@ -119,10 +119,10 @@ public class SeleniumController {
         return "redirect:/";
     }
     
-    /** 샤인웰 10:00 */
+    /** 아이리스 일회용 11시 */
     @RequestMapping("/mask5")
     public String mask5() {
-        this.maskShopUrl ="https://smartstore.naver.com/shinewell_healthcare/products/4861603330";
+        this.maskShopUrl ="https://smartstore.naver.com/iriskorea/products/4868464859";
         this.getMaskNoOption();
         
         return "redirect:/";
@@ -202,6 +202,115 @@ public class SeleniumController {
         }
     }
     
+    /**
+     * 
+     * 네이버 로그인 후 판매사이트에서 마스크 구매 (New..)
+     *
+     * @since 2020. 4. 17.
+     * @author yong
+     *
+     * @param selectText 셀렉트박스 기본 텍스트
+     * @param containText 셀렉트박스에서 포함될 단어
+     * @param exceptText 셀렉트박스에서 제외될 단어
+     */
+    private void getMask(String selectText, String containText,String exceptText) {
+        WebDriver driver = new ChromeDriver(option);
+        
+        WebDriverWait wait = new WebDriverWait(driver, 18000);
+        
+        try {
+            // 로그인을 위한 naver 이동
+            driver.navigate().to(NAVER_URL);
+            
+            // 로그인 성공시까지 5초마다 DOM 탐색
+            wait.pollingEvery(Duration.ofMillis(5000));
+            wait.until(new Function<WebDriver, WebElement>() {
+                @Override
+                public WebElement apply(WebDriver webDriver) {
+                    count++;
+                    log.debug("로그인성공까지 대기중....");
+                    
+                    // 브라우저 열리고 사용자가 조작시 DOM 탐색을 못하므로 15초마다 검색버튼 클릭
+                    if (count % 3 == 0) {
+                        driver.findElement(By.cssSelector("#search_btn")).click();
+                        log.debug("로그인 유지를위한 검색창 클릭");
+                    }
+                    return driver.findElement(By.cssSelector(".gnb_my"));
+                }
+            });
+            
+            /// 로그인 성공 후 마스크 판매처로 URL 이동
+            driver.navigate().to(this.maskShopUrl);
+            driver.get(this.maskShopUrl);
+            WebElement webElement = null;
+            
+            wait = new WebDriverWait(driver, 60000);
+            // 새로고침 속도
+            wait.pollingEvery(Duration.ofMillis(10));
+            
+            boolean soldout = true;
+            
+            while (soldout) {
+                // 구매하기 버튼 찾을때까지 새로고침 진행
+                webElement = wait.until(new Function<WebDriver, WebElement>() {
+                    @Override
+                    public WebElement apply(WebDriver webDriver) {
+                        driver.navigate().refresh();
+                        
+                        // 페이지 에러날때 네이버 홈 이동 후 다시 사이트로 이동 (테스트중)
+                        
+                        if (driver.findElements(By.className("title_error")).size() != 0) {
+                            driver.close();
+                            return null;
+                        }
+                        
+                        return driver.findElement(By.linkText("구매하기"));
+                    }
+                });
+
+                // 구매하기 버튼이 활성화 되어있을때만 진행
+                if (webElement.getAttribute("class").length() > 12) {
+                    // select box label
+                    List<WebElement> list = driver.findElements(By.cssSelector(".selectbox-label"));
+                    
+                    List<WebElement> optionList = driver.findElements(By.cssSelector("option"));
+                    // 품절이 아닌 옵션값을 가지고있는 요소
+                    WebElement findOption = null;
+                    for (WebElement w : optionList) {
+                        log.debug("option 텍스트 : "+w.getText());
+                        if (!w.getText().contains(exceptText) && w.getText().contains(containText)) {
+                            findOption = w;
+                        }
+                    }
+                    
+                    // 내가 원하는 옵션이 품절이 아닐때만 진행
+                    if (findOption != null) {
+                        for (WebElement w : list) {
+                            // selectText가  포함된 셀렉트박스를 찾아 클릭
+                            if (w.getText().contains("선택하세요") || w.getText().contains(selectText)) {
+                                w.click();
+                                soldout = false;
+                                break;
+                            }
+                        }
+                        Thread.sleep(100);
+                        findOption.click();
+                        Thread.sleep(100);
+                        webElement.click();
+                    }
+                }
+                log.debug("======>>>>>>>>>>> {}",webElement.getAttribute("class"));
+            }
+        } catch (NoSuchSessionException n) {
+            log.debug(">>>>>>>>>>>>>>강제종료<<<<<<<<<<<<<<<<<<");
+            log.debug("5분정도 새로고침 진행시 나타나는");
+            log.debug("페이지 에러는 해결방법이 없어 강제종료 시킴.. 재시작 바람");
+            log.debug("게릴라 판매처는 어쩔 수 없이 여러번 실행해야하며");
+            log.debug("시간 지정 판매처에서 페이지 에러뜨면 다음기회에...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     
     /**
@@ -215,7 +324,8 @@ public class SeleniumController {
      * @param containText 셀렉트박스에서 포함될 단어
      * @param exceptText 셀렉트박스에서 제외될 단어
      */
-    private void getMask(String selectText, String containText,String exceptText) {
+    @Deprecated
+    private void 구버전(String selectText, String containText,String exceptText) {
         WebDriver driver = new ChromeDriver(option);
 
         WebDriverWait wait = new WebDriverWait(driver, 18000);

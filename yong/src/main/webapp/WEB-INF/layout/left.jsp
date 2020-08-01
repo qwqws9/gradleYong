@@ -26,11 +26,11 @@
 	    	<hr>
 	    </li>
 	    <li>
-	    	<a href="/mask5" class="btn btn-large btn-danger">샤인웰 10:00</a>
+	    	<a href="/mask5" class="btn btn-large btn-danger">아이리스 11:00</a>
 	    	<hr>
 	    </li>
 	    <li>
-	    	<a href="/mask" class="btn btn-large btn-success">엔에이웰 16:00</a>
+	    	<a href="/mask" class="btn btn-large btn-success">금아..</a>
 	        <hr>
 	    </li>
 <!-- 	    <li> -->
