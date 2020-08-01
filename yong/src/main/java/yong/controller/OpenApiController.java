@@ -344,12 +344,15 @@ public class OpenApiController extends BaseController {
     }
     
 
+    @SuppressWarnings("unchecked")
     @RequestMapping("/neople/equip/{server}")
     @ResponseBody
-    public String neopleApi(@PathVariable String server, @RequestParam String name) throws UnsupportedEncodingException {
+    public String neopleApi(@PathVariable String server, @RequestParam String name, @RequestParam(required = false, defaultValue = "N") String imgYn) throws UnsupportedEncodingException {
         
         BufferedReader br = null;
         StringBuilder sb = new StringBuilder();
+        JSONObject imgObj = new JSONObject();
+        imgObj.put("server", server);
         try {
             if (SERVER.containsKey(server)) {
                 server = SERVER.get(server);
@@ -371,6 +374,10 @@ public class OpenApiController extends BaseController {
             while((line = br.readLine()) != null) {
                 sb.append(line);
             }
+            
+            
+            imgObj.put("id", name);
+            imgObj.put("img", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ chcId + "zoom=1");
             
             JSONParser parse = new JSONParser();
             JSONObject obj = (JSONObject)parse.parse(sb.toString());
@@ -416,6 +423,41 @@ public class OpenApiController extends BaseController {
                 sb.append("*emrms*");
                 sb.append("*emrms*");
             }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    
+                }
+            }
+        }
+        
+        return imgYn == "N" ? sb.toString() : imgObj.toJSONString();
+    }
+    
+    @RequestMapping("/neople/img/{server}")
+    @ResponseBody
+    public String neopleApi3(@PathVariable String server, @RequestParam String name) throws UnsupportedEncodingException {
+        
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            if (SERVER.containsKey(server)) {
+                server = SERVER.get(server);
+            } else {
+                return "서버명을 확인해주세요.";
+            }
+            
+            String chcId = this.getCharacterId(server,name);
+            if ("x".equals(chcId)) { return "존재하지 않는 캐릭터 입니다."; }
+            
+            // https://img-api.neople.co.kr/df/servers/<serverId>/characters/<characterId>?zoom=1
+            String imgUrl = "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ chcId +"zoom=1";
+            
             
         } catch (Exception e) {
             e.printStackTrace();
