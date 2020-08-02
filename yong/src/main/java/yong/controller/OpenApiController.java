@@ -175,6 +175,7 @@ public class OpenApiController extends BaseController {
         
         String chcId = this.getCharacterId(neopleServer,name);
         obj.put("img", "https://img-api.neople.co.kr/df/servers/" + neopleServer +"/characters/"+ chcId + "?zoom=1");
+        obj.put("img2", "https://img-api.neople.co.kr/df/servers/" + neopleServer +"/characters/"+ chcId + "?zoom=3");
         
         
         try {
