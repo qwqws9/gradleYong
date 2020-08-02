@@ -35,8 +35,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 		  template_id: 33605,
 		  template_args: {
 		  img: json.img,
-		  profile: json.server + ' - ' + json.id,
-		  sample : '여기는 뭐가 들어가면 좋을까?',
+		  profile: json.server + ' - ' + json.name,
+		  sample : json.desc,
 		  button1 : '버튼1',
 		  button2 : '버튼2'
 		}}, "custom");
