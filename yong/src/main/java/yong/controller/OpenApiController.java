@@ -239,7 +239,10 @@ public class OpenApiController extends BaseController {
                 
                 sb.append(server + " / " + dename + "*emrms*");
                 
-                obj.put("desc", infoArr[1] + " / " + infoArr[2].split(" ")[1] + " 힘/지능 : " + a + "물마독 : " + b + "버프점수 : " + c);
+                obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
+                obj.put("rogen", "힘/지능 : " + a);
+                obj.put("siroco", "물마독 : " + b);
+                //obj.put("desc", infoArr[1] + " / " + infoArr[2].split(" ")[1] + " 힘/지능 : " + a + "물마독 : " + b + "버프점수 : " + c);
                 
                 sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
                 sb.append("------------------------------");
@@ -275,7 +278,10 @@ public class OpenApiController extends BaseController {
                     siroco = ele.select("td:nth-child(3)").text();
                 }
                 String[] infoArr = info.split("/");
-                obj.put("desc", infoArr[1] + " / " + infoArr[2].split(" ")[1] + " 로젠 1시 : " + numberToKorean(rogen) + "시로코 1시 : " + numberToKorean(siroco));
+                obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
+                obj.put("rogen", "로젠 1시 : " + numberToKorean(rogen));
+                obj.put("siroco", "시로코 1시 : " + numberToKorean(siroco));
+                //obj.put("desc", infoArr[1] + " / " + infoArr[2].split(" ")[1] + " 로젠 1시 : " + numberToKorean(rogen) + "시로코 1시 : " + numberToKorean(siroco));
                 
                 sb.setLength(0);
                 sb.append(server + " / " + dename + "*emrms*");
