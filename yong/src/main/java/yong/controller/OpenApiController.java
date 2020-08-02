@@ -166,8 +166,15 @@ public class OpenApiController extends BaseController {
         JSONObject obj = new JSONObject();
         obj.put("server", server);
         obj.put("name", name);
-        String chcId = this.getCharacterId(server,name);
-        obj.put("img", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ chcId + "?zoom=1");
+        String neopleServer = "";
+        if (SERVER.containsKey(server)) {
+            neopleServer = SERVER.get(server);
+        } else {
+            return "서버명을 확인해주세요.";
+        }
+        
+        String chcId = this.getCharacterId(neopleServer,name);
+        obj.put("img", "https://img-api.neople.co.kr/df/servers/" + neopleServer +"/characters/"+ chcId + "?zoom=1");
         
         
         try {
