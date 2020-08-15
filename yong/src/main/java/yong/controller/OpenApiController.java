@@ -325,9 +325,9 @@ public class OpenApiController extends BaseController {
      * @throws UnsupportedEncodingException
      */
     @SuppressWarnings("unchecked")
-    @RequestMapping("/neople/searchInfo/{server}/{name}")
+    @RequestMapping("/neople/searchInfo/{server}/{name}/{encName}")
     @ResponseBody
-    public String kakaoLink2(@PathVariable String server, @PathVariable String name) throws UnsupportedEncodingException {
+    public String kakaoLink2(@PathVariable String server, @PathVariable String name, @PathVariable String encName) throws UnsupportedEncodingException {
         
         Document doc = null;
         StringBuilder sb = new StringBuilder();
@@ -338,7 +338,7 @@ public class OpenApiController extends BaseController {
         obj.put("img2", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ name + "?zoom=3");
         
         try {
-            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+server+"&name="+name;
+            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+server+"&name="+encName;
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
         
             if (doc.text().indexOf("점검중") > -1) { obj.put("msg", "현재 점검중 입니다."); return obj.toJSONString(); }
