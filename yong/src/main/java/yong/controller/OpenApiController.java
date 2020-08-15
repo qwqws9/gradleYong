@@ -318,6 +318,117 @@ public class OpenApiController extends BaseController {
     
     
     /**
+     *  카카오 링크 (NEW)
+     * @param server
+     * @param name
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping("/neople/searchInfo/{server}/{name}")
+    @ResponseBody
+    public String kakaoLink2(@PathVariable String server, @PathVariable String name) throws UnsupportedEncodingException {
+        
+        Document doc = null;
+        StringBuilder sb = new StringBuilder();
+        JSONObject obj = new JSONObject();
+        obj.put("server", server);
+        obj.put("name", name);
+        obj.put("img", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ name + "?zoom=1");
+        obj.put("img2", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ name + "?zoom=3");
+        
+        try {
+            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+server+"&name="+name;
+            doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+        
+            if (doc.text().indexOf("점검중") > -1) { obj.put("msg", "현재 점검중 입니다."); return obj.toJSONString(); }
+            if (doc.text().indexOf("없습니다.") > -1) { obj.put("msg", "검색결과가 없습니다. 아이디를 확인해주세요."); return obj.toJSONString(); }
+            
+            Elements e = doc.select("#equipment > tbody > tr:nth-child(1) > td:nth-child(1) > div.image_cut > a");
+            
+            for (Element b : e) {
+                System.out.println(b);
+                if (b.attr("href").indexOf("view.jsp") == -1) { continue; }
+                sb.append(DUNDAM);
+                sb.append(b.attr("href"));
+            }
+            
+            doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+            
+            String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
+            
+            if (doc.text().indexOf("버프 계산") > -1) {
+                String[] infoArr = info.split("/");
+                String locA = "5";
+                String locB = "5";
+                String locC = "9";
+                if (infoArr[1].indexOf("眞 크루세이더") > -1) {
+                    locA = "6";
+                    locB = "6";
+                    locC = "11";
+                } 
+                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(2)
+                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(4)
+                // #Present > table > tbody > tr:nth-child(11) > td
+                
+                // 세라핌 헤카테
+                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(2)
+                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(4)
+                // #Present > table > tbody > tr:nth-child(9) > td
+                
+                //doc.select("#myTab > li.active > a"); // 버프캐릭 확인용
+                String a = doc.select("#Present > table > tbody > tr:nth-child("+locA+") > td:nth-child(2)").text(); // 힘 지능
+                String b = doc.select("#Present > table > tbody > tr:nth-child("+locB+") > td:nth-child(4)").text(); // 물마독
+                String c = doc.select("#Present > table > tbody > tr:nth-child("+locC+") > td").text(); // 버프 점수
+                
+                sb.setLength(0);
+                
+//                sb.append(server + " / " + dename + "*emrms*");
+                
+                obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
+                obj.put("rogen", "힘/지능 : " + a);
+                obj.put("siroco", "물마독 : " + b);
+            } else {
+                String send = ""; // 샌드백
+                String rogen = ""; // 로젠 1시
+                String siroco = ""; // 시로코 1시
+                
+                Elements AAA = doc.select("#rogen > table > tbody > tr"); // 로젠 1시
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    rogen = ele.select("td:nth-child(3)").text();
+                }
+                
+                AAA = doc.select("#sendbag > table > tbody > tr");
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    send = ele.select("td:nth-child(2)").text();
+                }
+                
+                AAA = doc.select("#siroco > table > tbody > tr");
+                for (Element ele : AAA) {
+                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+                    siroco = ele.select("td:nth-child(3)").text();
+                }
+                String[] infoArr = info.split("/");
+                obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
+                obj.put("rogen", "로젠 1시 : " + numberToKorean(rogen));
+                obj.put("siroco", "시로코 1시 : " + numberToKorean(siroco));
+                //obj.put("desc", infoArr[1] + " / " + infoArr[2].split(" ")[1] + " 로젠 1시 : " + numberToKorean(rogen) + "시로코 1시 : " + numberToKorean(siroco));
+            }
+            
+        } catch (IOException e) {
+            //return "조회 실패! *emrms* 관리자에게 문의주세요.";
+        }
+        
+        if (!obj.containsKey("msg")) {
+            obj.put("msg", "ok");
+        }
+        
+        return obj.toJSONString();
+    }
+    
+    /**
      * 던담 대미지 조회
      * @return
      * @throws UnsupportedEncodingException 
@@ -667,6 +778,7 @@ public class OpenApiController extends BaseController {
             name = this.encodeURIComponent(name);
             
             String a = NEOPLE + "servers/" + server + "/characters?characterName="+ name +"&limit=10&wordType=match&apikey="+ API_KEY;
+            
             
             URL url = new URL(a);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
