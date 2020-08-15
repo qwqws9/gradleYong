@@ -336,8 +336,8 @@ public class OpenApiController extends BaseController {
         obj.put("name", name);
         obj.put("img", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ name + "?zoom=1");
         obj.put("img2", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ name + "?zoom=3");
-        
         try {
+            encName = encodeURIComponent(encName);
             this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+server+"&name="+encName;
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
         
