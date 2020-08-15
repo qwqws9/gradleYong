@@ -573,9 +573,9 @@ public class OpenApiController extends BaseController {
         
         try {
             Document doc = null;
+            String encName = encodeURIComponent(name);
             
-            
-            this.defaultUrl = DUNTOKI + "giraffe?serverNm="+server+"&charNm="+name;
+            this.defaultUrl = DUNTOKI + "giraffe?serverNm="+server+"&charNm="+encName;
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
             if (doc.text().indexOf("존재하지 않는 캐릭터") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요.";}
             
