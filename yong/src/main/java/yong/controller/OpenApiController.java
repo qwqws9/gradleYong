@@ -962,4 +962,33 @@ public class OpenApiController extends BaseController {
 
         return str;
     }
+    
+    @SuppressWarnings("unchecked")
+    @RequestMapping("/itemGrade")
+    @ResponseBody
+    public String itemGrade() throws UnsupportedEncodingException {
+        Document doc = null;
+        Elements elements = null;
+        JSONObject obj = new JSONObject();
+        this.defaultUrl = "https://dunfaoff.com/Grade.df";
+        
+        try {
+            doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+            Elements e = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child(1) > div > div.card-header > b");
+            Elements e1 = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child(1) > div > div.card-body > div:nth-child(1)");
+            for (int i = 1; i < 4; i++) {
+                elements = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child("+i+") > div > div.card-header > b");
+                obj.put("src" + i, elements.select("img").attr("src"));
+                obj.put("name" + i, elements.text());
+                System.out.println(elements.text());
+                elements = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child("+i+") > div > div.card-body > div:nth-child(1)");
+                obj.put("grade" + i, elements.text());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
+        return obj.toJSONString();
+    }
 }
