@@ -1028,9 +1028,9 @@ public class OpenApiController extends BaseController {
                     obj.put("link" + i, elements.attr("href"));
                     String sub = "";
                     elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_date");
-                    sub += elements.text() + " | ";
+                    sub += elements.text() + " | 조회수 - ";
                     elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_count");
-                    sub += elements.text() + " | ";
+                    sub += elements.text() + " | 추천 - ";
                     elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_recommend");
                     sub += elements.text();
                     obj.put("sub" + i, sub);
