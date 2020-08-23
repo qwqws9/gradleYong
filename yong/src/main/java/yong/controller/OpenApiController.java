@@ -477,19 +477,11 @@ public class OpenApiController extends BaseController {
                 String locA = "5";
                 String locB = "5";
                 String locC = "9";
-                if (infoArr[1].indexOf("眞 크루세이더") > -1) {
+                if (infoArr[1].indexOf("眞") > -1) {
                     locA = "6";
                     locB = "6";
                     locC = "11";
-                } 
-                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(2)
-                // #Present > table > tbody > tr:nth-child(6) > td:nth-child(4)
-                // #Present > table > tbody > tr:nth-child(11) > td
-                
-                // 세라핌 헤카테
-                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(2)
-                // #Present > table > tbody > tr:nth-child(5) > td:nth-child(4)
-                // #Present > table > tbody > tr:nth-child(9) > td
+                }
                 
                 //doc.select("#myTab > li.active > a"); // 버프캐릭 확인용
                 String a = doc.select("#Present > table > tbody > tr:nth-child("+locA+") > td:nth-child(2)").text(); // 힘 지능
