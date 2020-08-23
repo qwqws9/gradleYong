@@ -362,7 +362,7 @@ public class OpenApiController extends BaseController {
                 String locA = "5";
                 String locB = "5";
                 String locC = "9";
-                if (infoArr[1].indexOf("眞 크루세이더") > -1) {
+                if (infoArr[1].indexOf("眞") > -1) {
                     locA = "6";
                     locB = "6";
                     locC = "11";
