@@ -974,8 +974,6 @@ public class OpenApiController extends BaseController {
         
         try {
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
-            Elements e = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child(1) > div > div.card-header > b");
-            Elements e1 = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child(1) > div > div.card-body > div:nth-child(1)");
             for (int i = 1; i < 4; i++) {
                 elements = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child("+i+") > div > div.card-header > b");
                 obj.put("src" + i, elements.select("img").attr("src"));
@@ -984,6 +982,45 @@ public class OpenApiController extends BaseController {
                 elements = doc.select("#back > div > div.col-sm-12.col-md-12.col-xl-8.col-lg-8 > div:nth-child(1) > section > div > div:nth-child("+i+") > div > div.card-body > div:nth-child(1)");
                 obj.put("grade" + i, elements.text());
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
+        return obj.toJSONString();
+    }
+    
+    // https://gall.dcinside.com/mgallery/board/lists?id=dnfqq&exception_mode=recommend
+    @SuppressWarnings("unchecked")
+    @RequestMapping("/dcinside")
+    @ResponseBody
+    public String dcinside(@RequestParam String path) throws UnsupportedEncodingException {
+        Document doc = null;
+        Elements elements = null;
+        JSONObject obj = new JSONObject();
+        
+        this.defaultUrl = "https://gall.dcinside.com/mgallery/board/lists?id=dnfqq&exception_mode=recommend";
+        if ("지마갤".equals(path)) {
+        } else {
+        }
+        
+        try {
+            doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+            
+            for (int i = 2; i < 7; i++) {
+                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_tit.ub-word > a:nth-child(1)");
+                obj.put("title" + (i-1), elements.text());
+                obj.put("link" + (i-1), elements.attr("href"));
+                String sub = "";
+                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_date");
+                sub += elements.text() + " | ";
+                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_count");
+                sub += elements.text() + " | ";
+                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_recommend");
+                sub += elements.text();
+                obj.put("sub" + (i-1), sub);
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
