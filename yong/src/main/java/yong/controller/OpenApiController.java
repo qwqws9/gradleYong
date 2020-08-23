@@ -999,27 +999,44 @@ public class OpenApiController extends BaseController {
         Elements elements = null;
         JSONObject obj = new JSONObject();
         
-        this.defaultUrl = "https://gall.dcinside.com/mgallery/board/lists?id=dnfqq&exception_mode=recommend";
         if ("지마갤".equals(path)) {
+            this.defaultUrl = "https://gall.dcinside.com/mgallery/board/lists?id=dnfqq&exception_mode=recommend";
         } else {
+            this.defaultUrl = "https://gall.dcinside.com/board/lists?id=d_fighter_new1&exception_mode=recommend";
         }
         
         try {
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
-            
-            for (int i = 2; i < 7; i++) {
-                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_tit.ub-word > a:nth-child(1)");
-                obj.put("title" + (i-1), elements.text());
-                obj.put("link" + (i-1), elements.attr("href"));
-                String sub = "";
-                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_date");
-                sub += elements.text() + " | ";
-                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_count");
-                sub += elements.text() + " | ";
-                elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_recommend");
-                sub += elements.text();
-                obj.put("sub" + (i-1), sub);
+            if ("지마갤".equals(path)) {
+                for (int i = 2; i < 7; i++) {
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_tit.ub-word > a:nth-child(1)");
+                    obj.put("title" + (i-1), elements.text());
+                    obj.put("link" + (i-1), elements.attr("href"));
+                    String sub = "";
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_date");
+                    sub += elements.text() + " | ";
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_count");
+                    sub += elements.text() + " | ";
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_recommend");
+                    sub += elements.text();
+                    obj.put("sub" + (i-1), sub);
+                }
+            } else {
+                for (int i = 1; i < 6; i++) {
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_tit.ub-word > a:nth-child(1)");
+                    obj.put("title" + i, elements.text());
+                    obj.put("link" + i, elements.attr("href"));
+                    String sub = "";
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_date");
+                    sub += elements.text() + " | ";
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_count");
+                    sub += elements.text() + " | ";
+                    elements = doc.select("#container > section.left_content > article:nth-child(3) > div.gall_listwrap.list > table > tbody > tr:nth-child("+i+") > td.gall_recommend");
+                    sub += elements.text();
+                    obj.put("sub" + i, sub);
+                }
             }
+            
             
         } catch (IOException e) {
             e.printStackTrace();
