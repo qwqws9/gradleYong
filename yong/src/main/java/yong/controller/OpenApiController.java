@@ -573,21 +573,24 @@ public class OpenApiController extends BaseController {
             
             sb.append("[" + server + " / " + name + "] *emrms*");
             sb.append("------------------------------"); sb.append("*emrms*");
-            String a1 = doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(6) > tbody > tr > td:nth-child(1) > font").text(); // 기린점수
-            String a2 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(6) > tbody > tr > td:nth-child(2) > font").text(); // 변동사항
-            String a3 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(12) > tbody > tr > td:nth-child(1) > font").text(); // 첫 신화
-            String a4 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(12) > tbody > tr > td:nth-child(2) > font").text(); // 신화 갯수
-            String a5 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(12) > tbody > tr > td:nth-child(3) > font").text(); // 산물
-            String a6 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(14) > tbody > tr > td:nth-child(3) > font").text(); // 잔향
-            String a7 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(14) > tbody > tr > td:nth-child(2) > font").text(); // 시로코 골카
-            String a8 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(14) > tbody > tr > td:nth-child(1) > font").text(); // 에픽도감 달성률
-            String a9 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(16) > tbody > tr > td:nth-child(1) > font").text(); // 던생 최고의날
-            String a10 =doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(16) > tbody > tr > td:nth-child(2) > font").text(); // 최고의날 획득 개수
-            String a11 = doc.select("body > center:nth-child(1) > div:nth-child(2) > table:nth-child(10) > tbody > tr > td:nth-child(2) > font").text();
-            a11 = a11.split("개")[0];
-            int a12 = 0;
-            if (NumberUtils.isNumber(a11)) {
-                a12 = Integer.parseInt(a11) * 10;
+            String a1 = doc.select("body > center:nth-child(1) > div.informationDiv > table.giraffeScore > tbody > tr > td:nth-child(2)").text(); // 기린점수
+            String a2 =doc.select("body > center:nth-child(1) > div.informationDiv > table.giraffeScore > tbody > tr > td:nth-child(1)").text(); // 변동사항
+            String a3 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo2 > tbody > tr > td:nth-child(1)").text(); // 첫 신화
+            String a4 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo2 > tbody > tr > td:nth-child(2)").text(); // 신화 갯수
+            String a5 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo2 > tbody > tr > td:nth-child(3)").text(); // 산물
+            String a6 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo3 > tbody > tr > td:nth-child(3)").text(); // 잔향
+            String a7 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo3 > tbody > tr > td:nth-child(2)").text(); // 시로코 골카
+            String a8 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo3 > tbody > tr > td:nth-child(1)").text(); // 에픽도감 달성률
+            String a9 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo4 > tbody > tr > td:nth-child(1)").text(); // 던생 최고의날
+            String a10 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo4 > tbody > tr > td:nth-child(2)").text(); // 최고의날 획득 개수
+//            String a11 = doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo1 > tbody > tr > td:nth-child(1)").text(); // 획득 에픽 전체 수
+            String a12 = doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo1 > tbody > tr > td:nth-child(2)").text(); // 획득 에픽 지혜인도
+            String a13 = doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo1 > tbody > tr > td:nth-child(3)").text(); // 획득 에픽 기타경로
+            
+            String temp = a12.split("개")[0];
+            int b12 = 0;
+            if (NumberUtils.isNumber(temp)) {
+                b12 = Integer.parseInt(temp) * 10;
             }
             
             sb.append("기린점수 : " + a1); sb.append("*emrms*");
@@ -596,14 +599,18 @@ public class OpenApiController extends BaseController {
             if (a4.indexOf("0") == -1) {
                 sb.append("획득한 신화 : " + a4); sb.append("*emrms*");
             }
-            if (a12 != 0) {
-                sb.append("지혜인도 근사값 : 약" + a12 + "회"); sb.append("*emrms*");
+            if (b12 != 0) {
+                sb.append("지혜인도 근사값 : 약" + b12 + "회"); sb.append("*emrms*");
             }
             sb.append("획득한 산물 : " + a5); sb.append("*emrms*");
             sb.append("잔향 획득여부 : " + a6); sb.append("*emrms*");
             sb.append("시로코 골카 : " + a7); sb.append("*emrms*");
             sb.append("던생 최고의 날 : " + a9); sb.append("*emrms*");
-            sb.append("획득한 에픽 수 : " + a10); sb.append("*emrms*");
+            sb.append("최고의 날 획득 수 : " + a10); sb.append("*emrms*");
+            sb.append("*emrms*");
+            sb.append("-----------획득경로-----------"); sb.append("*emrms*");
+            sb.append("지혜의 인도 : " + a12); sb.append("*emrms*");
+            sb.append("기타 경로 : " + a13); sb.append("*emrms*");
             sb.append("------------------------------"); sb.append("*emrms*");
             sb.append("에픽도감 달성률 : " + a8); sb.append("*emrms*");
             sb.append("------------------------------");
