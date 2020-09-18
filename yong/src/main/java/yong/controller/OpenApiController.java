@@ -477,13 +477,13 @@ public class OpenApiController extends BaseController {
                 String locA = "5";
                 String locB = "5";
                 String locC = "9";
-                if (infoArr[1].indexOf("眞") > -1) {
-                    locA = "7";
-                    locB = "7";
-                    locC = "13";
-                } else if (infoArr[1].indexOf("眞 인챈") > -1) {
+                if (infoArr[1].indexOf("眞 인챈") > -1) {
                     locA = "6";
                     locB = "6";
+                    locC = "13";
+                } else if (infoArr[1].indexOf("眞") > -1) {
+                    locA = "7";
+                    locB = "7";
                     locC = "13";
                 }
                 //doc.select("#myTab > li.active > a"); // 버프캐릭 확인용
