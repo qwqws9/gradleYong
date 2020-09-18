@@ -362,11 +362,15 @@ public class OpenApiController extends BaseController {
                 String locA = "5";
                 String locB = "5";
                 String locC = "9";
-                if (infoArr[1].indexOf("眞") > -1) {
+                if (infoArr[1].indexOf("眞 인챈") > -1) {
                     locA = "6";
                     locB = "6";
-                    locC = "11";
-                } 
+                    locC = "13";
+                } else if (infoArr[1].indexOf("眞") > -1) {
+                    locA = "7";
+                    locB = "7";
+                    locC = "13";
+                }
                 // #Present > table > tbody > tr:nth-child(6) > td:nth-child(2)
                 // #Present > table > tbody > tr:nth-child(6) > td:nth-child(4)
                 // #Present > table > tbody > tr:nth-child(11) > td
@@ -388,6 +392,8 @@ public class OpenApiController extends BaseController {
                 obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
                 obj.put("rogen", "힘/지능 : " + a);
                 obj.put("siroco", "물마독 : " + b);
+                obj.put("total", "버프점수 : " + c);
+                obj.put("kind", "buf");
             } else {
                 String send = ""; // 샌드백
                 String rogen = ""; // 로젠 1시
@@ -414,6 +420,7 @@ public class OpenApiController extends BaseController {
                 obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
                 obj.put("rogen", "로젠 1시 : " + numberToKorean(rogen));
                 obj.put("siroco", "시로코 1시 : " + numberToKorean(siroco));
+                obj.put("kind", "deal");
                 //obj.put("desc", infoArr[1] + " / " + infoArr[2].split(" ")[1] + " 로젠 1시 : " + numberToKorean(rogen) + "시로코 1시 : " + numberToKorean(siroco));
             }
             
