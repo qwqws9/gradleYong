@@ -392,7 +392,7 @@ public class OpenApiController extends BaseController {
                 obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
                 obj.put("rogen", "힘/지능 : " + a);
                 obj.put("siroco", "물마독 : " + b);
-                obj.put("total", "버프점수 : " + c);
+                obj.put("total", "버프력:" + c);
                 obj.put("kind", "buf");
             } else {
                 String send = ""; // 샌드백
