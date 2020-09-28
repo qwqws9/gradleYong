@@ -10,6 +10,12 @@ import lombok.ToString;
 //@ApiModel(value="BoardDto : 게시글 내용", description = "게시글 내용")
 public class DuntokiDto extends BaseDto {
 
+    public DuntokiDto() {
+        // TODO Auto-generated constructor stub
+    }
+    public DuntokiDto(String mainId) {
+        this.mainId = mainId;
+    }
     private Long seqno;
 
     private String mainId;

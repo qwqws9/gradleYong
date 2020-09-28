@@ -4,12 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import yong.dto.BoardDto;
+import yong.dto.DuntokiDto;
 
 @Mapper
 public interface DuntokiMapper {
 
-    public List<BoardDto> selectBoardList(BoardDto param);
-
-    public int selectBoardListCount();
+    public List<DuntokiDto> selectDuntokiList(DuntokiDto param);
 }
