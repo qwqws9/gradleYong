@@ -63,12 +63,15 @@ public class DuntokiController extends BaseController {
         
         
         List<DuntokiDto> list = this.duntokiService.duntokiList(new DuntokiDto(mainId));
-        for (DuntokiDto dto2 : list) {
-            boolean chk = Arrays.stream(nameArr).anyMatch(dto2.getSubId()::equals);
-            if (chk) {
-                list2.remove(dto2.getSubId());
+        if (list != null) {
+            for (DuntokiDto dto2 : list) {
+                boolean chk = Arrays.stream(nameArr).anyMatch(dto2.getSubId()::equals);
+                if (chk) {
+                    list2.remove(dto2.getSubId());
+                }
             }
         }
+        
         
         for (int i = 0; i < list2.size(); i++) {
             dto.setSubId(list2.get(i));
