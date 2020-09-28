@@ -110,10 +110,12 @@ public class DuntokiController extends BaseController {
                 sb.append(" - ");
                 sb.append(dto.getServerName()); sb.append("*emrms*");
                 sb.append("--------------------");
+                sb.append("*emrms*");
                 firstChk = false;
             }
-            sb.append("*emrms*");
-            sb.append(dto.getSeqno()); sb.append(" - ");
+            if ("Y".equals(yn)) {
+                sb.append(dto.getSeqno()); sb.append(" - ");
+            }
             sb.append(dto.getSubId()); sb.append("*emrms*");
         }
         
