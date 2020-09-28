@@ -112,6 +112,7 @@ public class DuntokiController extends BaseController {
                 sb.append("--------------------");
                 firstChk = false;
             }
+            sb.append("*emrms*");
             sb.append(dto.getSeqno()); sb.append(" - ");
             sb.append(dto.getSubId()); sb.append("*emrms*");
         }

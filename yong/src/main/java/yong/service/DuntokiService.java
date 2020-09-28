@@ -51,6 +51,7 @@ public class DuntokiService {
                 dto.setServerName(e.getServerName());
                 dto.setSubId(e.getSubId());
                 dto.setSeqno(e.getSeqno());
+                dto.setMainId(e.getMainId());
                 list.add(dto);
             }
 
