@@ -1,5 +1,7 @@
 package yong.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.List;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +39,7 @@ public class DuntokiController extends BaseController {
     @Autowired
     private DuntokiService duntokiService;
 
-    @RequestMapping("/teset/aaa/{server}/{mainId}")
+    @RequestMapping("/teset/insert/{server}/{mainId}")
     @ResponseBody
     public String insert(@PathVariable String server, @PathVariable String mainId, @RequestParam String name) throws ParseException {
         System.out.println(server);
@@ -112,7 +116,7 @@ public class DuntokiController extends BaseController {
         if ("Y".equals(yn)) {
             sb.append("*emrms*");
             sb.append("삭제할 캐릭터명 앞에 숫자를"); sb.append("*emrms*");
-            sb.append("/삭제 {모험단명} {숫자}"); sb.append("*emrms*");
+            sb.append("/캐릭터삭제 {모험단명} {숫자}"); sb.append("*emrms*");
             sb.append("형식으로 입력해주세요.");
         }
         
@@ -137,5 +141,85 @@ public class DuntokiController extends BaseController {
         }
         
         return returnDto.getSubId() + " 삭제완료";
+    }
+    
+    
+    private String defaultUrl;
+    private static final String DUNTOKI = "http://duntoki.xyz/";
+    
+    @RequestMapping("/duntoki/total/{mainId}")
+    @ResponseBody
+    public String duntoki(@PathVariable String mainId) throws UnsupportedEncodingException {
+        
+        StringBuilder sb = new StringBuilder();
+        List<DuntokiDto> list = this.duntokiService.duntokiList(new DuntokiDto(mainId));
+        if (list == null) {
+            return "캐릭터 등록을 먼저 해주세요.";
+        }
+        
+        String server = "";
+        Document doc = null;
+        String encName = "";
+        
+        try {
+            int a = 0; // 신화 개수
+            int b = 0; // 산물 개수
+            int c = 0; // 시로코 골카 개수
+            int d = 0; // 지혜인도 에픽 획득 수
+            int e = 0; // 기타경로 에픽 획득 수
+            
+            for (DuntokiDto dto : list) {
+                server = dto.getServerName();
+                encName = encodeURIComponent(dto.getSubId());
+                
+                this.defaultUrl = DUNTOKI + "giraffe?serverNm="+server+"&charNm="+encName;
+                doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+                if (doc.text().indexOf("존재하지 않는 캐릭터") > -1) { continue; }
+                
+                String a1 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo2 > tbody > tr > td:nth-child(2)").text(); // 신화 갯수
+                String a2 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo2 > tbody > tr > td:nth-child(3)").text(); // 산물
+                String a3 =doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo3 > tbody > tr > td:nth-child(2)").text(); // 시로코 골카
+                String a4 = doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo1 > tbody > tr > td:nth-child(2)").text(); // 획득 에픽 지혜인도
+                String a5 = doc.select("body > center:nth-child(1) > div.informationDiv > table.getItemInfo1 > tbody > tr > td:nth-child(3)").text(); // 획득 에픽 기타경로
+                
+                a += Integer.parseInt(a1.split("개")[0]); // 신화 갯수
+                b += Integer.parseInt(a2.split("개")[0]); // 산물
+                c += Integer.parseInt(a3.split("개")[0]); // 시로코 골카
+                d += Integer.parseInt(a4.split("개")[0]); // 획득 에픽 지혜인도
+                e += Integer.parseInt(a5.split("개")[0]); // 획득 에픽 기타경로
+            }
+            
+            
+            sb.append("[" + server + " / " + mainId + "] *emrms*");
+            sb.append("등록된 캐릭터 수 : " + list.size()); sb.append("*emrms*");
+            sb.append("------------------------------"); sb.append("*emrms*");
+            sb.append("지혜인도 근사값 : 약" + (d * 10) + "회"); sb.append("*emrms*");
+            sb.append("획득한 산물 : " + b + "개"); sb.append("*emrms*");
+            sb.append("시로코 골카 : " + c + "개"); sb.append("*emrms*");
+            sb.append("획득 신화 : " + c + "개"); sb.append("*emrms*");
+            sb.append("*emrms*");
+            sb.append("-----------획득경로-----------"); sb.append("*emrms*");
+            sb.append("지혜의 인도 : " + d + "개"); sb.append("*emrms*");
+            sb.append("기타 경로 : " + e + "개"); sb.append("*emrms*");
+            sb.append("------------------------------"); sb.append("*emrms*");
+            
+        } catch(Exception e) {
+            return "조회 실패! *emrms* 관리자에게 문의주세요.";
+        }
+        
+        return sb.toString();
+    }
+    
+    // 던파 API 인코딩 메서드
+    public String encodeURIComponent(String component)   {     
+        String result = null;      
+
+        try {       
+            result = URLEncoder.encode(component, "UTF-8");
+        } catch (Exception e) {       
+            result = component;     
+        }      
+
+        return result;   
     }
 }
