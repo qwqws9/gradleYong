@@ -202,7 +202,7 @@ public class DuntokiController extends BaseController {
             sb.append("지혜인도 근사값 : 약" + (d * 10) + "회"); sb.append("*emrms*");
             sb.append("획득한 산물 : " + b + "개"); sb.append("*emrms*");
             sb.append("시로코 골카 : " + c + "개"); sb.append("*emrms*");
-            sb.append("획득 신화 : " + c + "개"); sb.append("*emrms*");
+            sb.append("획득 신화 : " + a + "개"); sb.append("*emrms*");
             sb.append("*emrms*");
             sb.append("-----------획득경로-----------"); sb.append("*emrms*");
             sb.append("지혜의 인도 : " + d + "개"); sb.append("*emrms*");
