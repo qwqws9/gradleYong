@@ -47,7 +47,7 @@ import yong.service.OpenApiService;
 @Slf4j
 public class OpenApiController extends BaseController {
     
-    private static final String DUNDAM = "http://dundam.xyz/";
+    private static final String DUNDAM = "https://dundam.xyz/";
     private static final String DUNTOKI = "http://duntoki.xyz/";
     private static final String NEOPLE = "https://api.neople.co.kr/df/";
     private static final String API_KEY = "NZsA1lAqj64UpeGK1XQxEfUU3PZUWOmw";
@@ -193,22 +193,12 @@ public class OpenApiController extends BaseController {
                 return obj.toJSONString();
             }
             
-            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+engServer+"&name="+name;
+            String neopleId = this.getCharacterId(engServer, dename);
+            
+            this.defaultUrl = DUNDAM + "view?image="+ neopleId +"&server="+engServer+"&name="+name;
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
-        
             if (doc.text().indexOf("점검중") > -1) { obj.put("msg", "현재 점검중 입니다."); return obj.toJSONString(); }
             if (doc.text().indexOf("없습니다.") > -1) { obj.put("msg", "검색결과가 없습니다. 아이디를 확인해주세요."); return obj.toJSONString(); }
-            
-            Elements e = doc.select("#equipment > tbody > tr:nth-child(1) > td:nth-child(1) > div.image_cut > a");
-            
-            for (Element b : e) {
-                System.out.println(b);
-                if (b.attr("href").indexOf("view.jsp") == -1) { continue; }
-                sb.append(DUNDAM);
-                sb.append(b.attr("href"));
-            }
-            
-            doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
             
             String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
             
@@ -260,48 +250,18 @@ public class OpenApiController extends BaseController {
                 String send = ""; // 샌드백
                 String rogen = ""; // 로젠 1시
                 String siroco = ""; // 시로코 1시
+                rogen = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(16) > div.cc > table > tbody > tr:nth-child(16) > td:nth-child(3)").text(); // 로젠 1시
+                send = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(15) > div.cc > table > tbody > tr:nth-child(13) > td:nth-child(2)").text();
+                siroco = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(18) > div.csw > table.adamage > tbody > tr > td > div").text();
+                String job = doc.select("body > div.c.con.container > div > div.in > li.job").text();
+                String rank = doc.select("body > div.c.con.container > div > div.icr > ul > li > con").text();
+                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li > span").text();
                 
-                Elements AAA = doc.select("#rogen > table > tbody > tr"); // 로젠 1시
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    rogen = ele.select("td:nth-child(3)").text();
-                }
-                
-                AAA = doc.select("#sendbag > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    send = ele.select("td:nth-child(2)").text();
-                }
-                
-                AAA = doc.select("#siroco > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    siroco = ele.select("td:nth-child(3)").text();
-                }
-                String[] infoArr = info.split("/");
-                obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
+                String[] infoArr = totalRank.split(" ");
+                obj.put("rank", job + " - (" + rank + "/" + infoArr[1] +"위");
                 obj.put("rogen", "로젠 1시 : " + numberToKorean(rogen));
                 obj.put("siroco", "시로코 1시 : " + numberToKorean(siroco));
-                //obj.put("desc", infoArr[1] + " / " + infoArr[2].split(" ")[1] + " 로젠 1시 : " + numberToKorean(rogen) + "시로코 1시 : " + numberToKorean(siroco));
                 
-                sb.setLength(0);
-                sb.append(server + " / " + dename + "*emrms*");
-                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
-                sb.append("------------------------------");
-                sb.append("*emrms*");
-                sb.append("&lt;샌드백&gt;");
-                sb.append("*emrms*");
-                sb.append(numberToKorean(send));
-                sb.append("*emrms*");
-                sb.append("&lt;로젠 1시&gt;");
-                sb.append("*emrms*");
-                sb.append(numberToKorean(rogen));
-                sb.append("*emrms*");
-                sb.append("&lt;시로코 1시&gt;");
-                sb.append("*emrms*");
-                sb.append(numberToKorean(siroco));
-                sb.append("*emrms*");
-                sb.append("------------------------------");
             }
             
         } catch (IOException e) {
@@ -460,7 +420,11 @@ public class OpenApiController extends BaseController {
                 return "서버명을 확인해주세요.";
             }
             
-            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+engServer+"&name="+name;
+            String neopleId = this.getCharacterId(engServer, dename);
+            System.out.println(neopleId);
+//            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+engServer+"&name="+name;
+            this.defaultUrl = DUNDAM + "view?image="+ neopleId +"&server="+engServer+"&name="+name;
+            System.out.println(defaultUrl);
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
         
             if (doc.text().indexOf("점검중") > -1) { return "현재 점검중 입니다."; }
@@ -475,9 +439,9 @@ public class OpenApiController extends BaseController {
                 sb.append(b.attr("href"));
             }
             
-            doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
+//            doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
             
-            String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
+            String info = doc.select("body > div.c.con.container > div > div.in > li.job").text(); // 캐릭터 정보
             
             if (doc.text().indexOf("버프 계산") > -1) {
                 String[] infoArr = info.split("/");
@@ -517,28 +481,41 @@ public class OpenApiController extends BaseController {
                 String rogen = ""; // 로젠 1시
                 String siroco = ""; // 시로코 1시
                 
-                Elements AAA = doc.select("#rogen > table > tbody > tr"); // 로젠 1시
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    rogen = ele.select("td:nth-child(3)").text();
-                }
+                //Elements AAA = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(16) > div.cc > table > tbody > tr:nth-child(16) > td:nth-child(3)"); // 로젠 1시
+                rogen = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(16) > div.cc > table > tbody > tr:nth-child(16) > td:nth-child(3)").text(); // 로젠 1시
+                send = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(15) > div.cc > table > tbody > tr:nth-child(13) > td:nth-child(2)").text();
+                siroco = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(18) > div.csw > table.adamage > tbody > tr > td > div").text();
+                System.out.println(send);
+                System.out.println(rogen);
+                System.out.println(siroco);
                 
-                AAA = doc.select("#sendbag > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    send = ele.select("td:nth-child(2)").text();
-                }
+                String job = doc.select("body > div.c.con.container > div > div.in > li.job").text();
+                String rank = doc.select("body > div.c.con.container > div > div.icr > ul > li > con").text();
+                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li > span").text();
                 
-                AAA = doc.select("#siroco > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    siroco = ele.select("td:nth-child(3)").text();
-                }
+                String[] infoArr = totalRank.split(" ");
+                System.out.println(job + " - (" + rank + "/" + infoArr[1] +"위");
+//                for (Element ele : AAA) {
+//                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+//                    rogen = ele.select("td:nth-child(3)").text();
+//                }
+//                
+//                AAA = doc.select("#sendbag > table > tbody > tr");
+//                for (Element ele : AAA) {
+//                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+//                    send = ele.select("td:nth-child(2)").text();
+//                }
+//                
+//                AAA = doc.select("#siroco > table > tbody > tr");
+//                for (Element ele : AAA) {
+//                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
+//                    siroco = ele.select("td:nth-child(3)").text();
+//                }
                 
                 sb.setLength(0);
                 sb.append(server + " / " + dename + "*emrms*");
-                String[] infoArr = info.split("/");
-                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
+//                String[] infoArr = info.split("/");
+//                sb.append(infoArr[1] + " / " + infoArr[2].split(" ")[1] + "*emrms*");
                 sb.append("------------------------------");
                 sb.append("*emrms*");
                 sb.append("&lt;샌드백&gt;");
@@ -576,7 +553,7 @@ public class OpenApiController extends BaseController {
         try {
             Document doc = null;
             String encName = encodeURIComponent(name);
-            
+            System.out.println(name);
             this.defaultUrl = DUNTOKI + "giraffe?serverNm="+server+"&charNm="+encName;
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
             if (doc.text().indexOf("존재하지 않는 캐릭터") > -1) { return "검색결과가 없습니다. *emrms* 아이디를 확인해주세요.";}
