@@ -298,22 +298,12 @@ public class OpenApiController extends BaseController {
         obj.put("img2", "https://img-api.neople.co.kr/df/servers/" + server +"/characters/"+ name + "?zoom=3");
         try {
             encName = encodeURIComponent(encName);
-            this.defaultUrl = DUNDAM + "searchActionTest.jsp?server="+server+"&name="+encName;
+            String neopleId = this.getCharacterId(server, encName);
+            
+            this.defaultUrl = DUNDAM + "view?image="+ neopleId +"&server="+server+"&name="+encName;
             doc = Jsoup.connect(defaultUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
-        
             if (doc.text().indexOf("점검중") > -1) { obj.put("msg", "현재 점검중 입니다."); return obj.toJSONString(); }
             if (doc.text().indexOf("없습니다.") > -1) { obj.put("msg", "검색결과가 없습니다. 아이디를 확인해주세요."); return obj.toJSONString(); }
-            
-            Elements e = doc.select("#equipment > tbody > tr:nth-child(1) > td:nth-child(1) > div.image_cut > a");
-            
-            for (Element b : e) {
-                System.out.println(b);
-                if (b.attr("href").indexOf("view.jsp") == -1) { continue; }
-                sb.append(DUNDAM);
-                sb.append(b.attr("href"));
-            }
-            
-            doc = Jsoup.connect(sb.toString()).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36").validateTLSCertificates(false).get();
             
             String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
             
@@ -358,26 +348,15 @@ public class OpenApiController extends BaseController {
                 String send = ""; // 샌드백
                 String rogen = ""; // 로젠 1시
                 String siroco = ""; // 시로코 1시
+                rogen = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(16) > div.cc > table > tbody > tr:nth-child(16) > td:nth-child(3)").text(); // 로젠 1시
+                send = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(15) > div.cc > table > tbody > tr:nth-child(13) > td:nth-child(2)").text();
+                siroco = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(18) > div.csw > table.adamage > tbody > tr > td > div").text();
+                String job = doc.select("body > div.c.con.container > div > div.in > li.job").text();
+                String rank = doc.select("body > div.c.con.container > div > div.icr > ul > li > con").text();
+                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li > span").text();
                 
-                Elements AAA = doc.select("#rogen > table > tbody > tr"); // 로젠 1시
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    rogen = ele.select("td:nth-child(3)").text();
-                }
-                
-                AAA = doc.select("#sendbag > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    send = ele.select("td:nth-child(2)").text();
-                }
-                
-                AAA = doc.select("#siroco > table > tbody > tr");
-                for (Element ele : AAA) {
-                    if (ele.select("th").text().indexOf("총 딜") == -1) { continue; }
-                    siroco = ele.select("td:nth-child(3)").text();
-                }
-                String[] infoArr = info.split("/");
-                obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
+                String[] infoArr = totalRank.split(" ");
+                obj.put("rank", job + " - (" + rank + "/" + infoArr[1] +"위");
                 obj.put("rogen", "로젠 1시 : " + numberToKorean(rogen));
                 obj.put("siroco", "시로코 1시 : " + numberToKorean(siroco));
                 obj.put("kind", "deal");
