@@ -304,20 +304,17 @@ public class OpenApiController extends BaseController {
             if (doc.text().indexOf("없습니다.") > -1) { obj.put("msg", "검색결과가 없습니다. 아이디를 확인해주세요."); return obj.toJSONString(); }
             
             String info = doc.select("body > div > div > div.col-sm-3 > div:nth-child(2) > p:nth-child(2) > font").text(); // 캐릭터 정보
-            
-            if (doc.text().indexOf("버프 계산") > -1) {
-                String[] infoArr = info.split("/");
+            String mainjob = doc.select("body > div.c.con.container > div > div.in > li.job").text();
+            if (doc.text().indexOf("버퍼랭킹") > -1) {
                 String locA = "5";
                 String locB = "5";
                 String locC = "9";
-                if (infoArr[1].indexOf("眞 인챈") > -1) {
+                if (mainjob.indexOf("眞 인챈") > -1) {
                     locA = "6";
-                    locB = "6";
-                    locC = "13";
-                } else if (infoArr[1].indexOf("眞") > -1) {
-                    locA = "7";
                     locB = "7";
-                    locC = "13";
+                } else if (mainjob.indexOf("眞") > -1) {
+                    locA = "7";
+                    locB = "8";
                 }
                 // #Present > table > tbody > tr:nth-child(6) > td:nth-child(2)
                 // #Present > table > tbody > tr:nth-child(6) > td:nth-child(4)
@@ -329,25 +326,29 @@ public class OpenApiController extends BaseController {
                 // #Present > table > tbody > tr:nth-child(9) > td
                 
                 //doc.select("#myTab > li.active > a"); // 버프캐릭 확인용
-                String a = doc.select("#Present > table > tbody > tr:nth-child("+locA+") > td:nth-child(2)").text(); // 힘 지능
-                String b = doc.select("#Present > table > tbody > tr:nth-child("+locB+") > td:nth-child(4)").text(); // 물마독
-                String c = doc.select("#Present > table > tbody > tr:nth-child("+locC+") > td").text(); // 버프 점수
+                String a = doc.select("body > div.ct.con.container > div.tab-wrap > div:nth-child(27) > div.cc.buffcal > table > tbody > tr:nth-child("+locA+") > td:nth-child(2) > div").text(); // 힘 지능
+                String b = doc.select("body > div.ct.con.container > div.tab-wrap > div:nth-child(27) > div.cc.buffcal > table > tbody > tr:nth-child("+locA+") > td:nth-child(3) > div").text(); // 물마독
+                String c = doc.select("body > div.ct.con.container > div.tab-wrap > div:nth-child(27) > div.cc.buffcal > table > tbody > tr:nth-child("+locB+") > td:nth-child(2)").text(); // 버프 점수
                 
+                //랭킹
+                String rank = doc.select("body > div.c.con.container > div > div.icr > ul > li:nth-child(2) > con").text();
+                //총랭킹
+                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li:nth-child(2) > span").text();
+                
+                String[] infoArr2 = totalRank.split(" ");
                 sb.setLength(0);
                 
 //                sb.append(server + " / " + dename + "*emrms*");
                 
-                obj.put("rank", infoArr[1] + " - " + infoArr[2].split(" ")[1]);
+                obj.put("rank", mainjob + " - (" + rank + "/" + infoArr2[1] +"위");
                 obj.put("rogen", "힘/지능 : " + a);
                 obj.put("siroco", "물마독 : " + b);
                 obj.put("total", "버프력:" + c);
                 obj.put("kind", "buf");
             } else {
-                String send = ""; // 샌드백
                 String rogen = ""; // 로젠 1시
                 String siroco = ""; // 시로코 1시
-                rogen = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(16) > div.cc > table > tbody > tr:nth-child(16) > td:nth-child(3)").text(); // 로젠 1시
-                send = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(15) > div.cc > table > tbody > tr:nth-child(13) > td:nth-child(2)").text();
+                rogen = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(16) > div.csw > table.adamage > tbody > tr > td > div").text(); // 로젠 1시
                 siroco = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(18) > div.csw > table.adamage > tbody > tr > td > div").text();
                 String job = doc.select("body > div.c.con.container > div > div.in > li.job").text();
                 String rank = doc.select("body > div.c.con.container > div > div.icr > ul > li > con").text();
