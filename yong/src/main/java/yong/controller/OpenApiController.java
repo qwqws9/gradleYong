@@ -309,9 +309,11 @@ public class OpenApiController extends BaseController {
                 String locA = "5";
                 String locB = "5";
                 String locC = "9";
+                boolean hekate = false;
                 if (mainjob.indexOf("眞 인챈") > -1) {
                     locA = "6";
                     locB = "7";
+                    hekate = true;
                 } else if (mainjob.indexOf("眞") > -1) {
                     locA = "7";
                     locB = "8";
@@ -340,10 +342,17 @@ public class OpenApiController extends BaseController {
                 
 //                sb.append(server + " / " + dename + "*emrms*");
                 
+                if (hekate) {
+                    String d[] = c.split("[(]");
+                    String rankhekate = d[1].substring(0,d[1].length()-1);
+                    obj.put("total", "버프력:" + rankhekate);
+                } else {
+                    obj.put("total", "버프력:" + c);
+                }
                 obj.put("rank", mainjob + " - (" + rank + "/" + infoArr2[1] +"위");
                 obj.put("rogen", "힘/지능 : " + a);
                 obj.put("siroco", "물마독 : " + b);
-                obj.put("total", "버프력:" + c);
+                
                 obj.put("kind", "buf");
             } else {
                 String rogen = ""; // 로젠 1시
