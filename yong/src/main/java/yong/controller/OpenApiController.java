@@ -344,8 +344,7 @@ public class OpenApiController extends BaseController {
                 
                 if (hekate) {
                     String d[] = c.split("[(]");
-                    String rankhekate = d[1].substring(0,d[1].length()-1);
-                    obj.put("total", "버프력:" + rankhekate);
+                    obj.put("total", "버프력:" + d[0]);
                 } else {
                     obj.put("total", "버프력:" + c);
                 }
