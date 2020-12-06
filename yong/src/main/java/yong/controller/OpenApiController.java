@@ -335,9 +335,9 @@ public class OpenApiController extends BaseController {
                 //랭킹
                 String rank = doc.select("body > div.c.con.container > div > div.icr > ul > li:nth-child(2) > con").text();
                 //총랭킹
-                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li:nth-child(2) > span").text();
+//                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li:nth-child(2) > span").text();
                 
-                String[] infoArr2 = totalRank.split(" ");
+//                String[] infoArr2 = totalRank.split(" ");
                 sb.setLength(0);
                 
 //                sb.append(server + " / " + dename + "*emrms*");
@@ -348,7 +348,8 @@ public class OpenApiController extends BaseController {
                 } else {
                     obj.put("total", "버프력:" + c);
                 }
-                obj.put("rank", mainjob + " - (" + rank + "/" + infoArr2[1] +"위");
+//                obj.put("rank", mainjob + " - (" + rank + "/" + infoArr2[1] +"위");
+                obj.put("rank", mainjob + " - " + rank +"위");
                 obj.put("rogen", "힘/지능 : " + a);
                 obj.put("siroco", "물마독 : " + b);
                 
@@ -360,10 +361,11 @@ public class OpenApiController extends BaseController {
                 siroco = doc.select("body > div.ct.con.container > div.tab-wrap > div.tab__content.damtab > div.damage > div > div:nth-child(18) > div.csw > table.adamage > tbody > tr > td > div").text();
                 String job = doc.select("body > div.c.con.container > div > div.in > li.job").text();
                 String rank = doc.select("body > div.c.con.container > div > div.icr > ul > li > con").text();
-                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li > span").text();
+//                String totalRank = doc.select("body > div.c.con.container > div > div.icr > ul > li > span").text();
                 
-                String[] infoArr = totalRank.split(" ");
-                obj.put("rank", job + " - (" + rank + "/" + infoArr[1] +"위");
+//                String[] infoArr = totalRank.split(" ");
+//                obj.put("rank", job + " - (" + rank + "/" + infoArr[1] +"위");
+                obj.put("rank", job + " - " + rank +"위");
                 obj.put("rogen", "로젠 1시 : " + numberToKorean(rogen));
                 obj.put("siroco", "시로코 1시 : " + numberToKorean(siroco));
                 obj.put("kind", "deal");
