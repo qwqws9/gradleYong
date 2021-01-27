@@ -62,11 +62,9 @@ public class CommonController {
 //        return mv;
 //    }
     @RequestMapping("/")
-    public ModelAndView index(@RequestParam String imgPath) {
+    public ModelAndView index() {
         ModelAndView mv = new ModelAndView();
-        mv.addObject("imgPath", imgPath);
-        mv.setViewName("/img/test");
-        
+        mv.setViewName("/index");
         return mv;
     }
 

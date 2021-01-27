@@ -104,7 +104,11 @@ function boardWrite() {
 
 $(function() {
     $('#ctgList').load("/layout/left", function() {
-        
+        var filter = 'Windows';
+
+        if (window.navigator && !window.navigator.userAgent.match(/Windows/i)) {
+        	$('#ctgList').remove();
+        }
     });
     
     $('.utterances').css('margin-left',0);
