@@ -106,18 +106,13 @@ public class PuppeteerController extends BaseController {
             JSONObject object = (JSONObject) parse.parse(sb.toString());
             String stat = (String) object.get("status");
             String msg = (String) object.get("msg");
-            
+            resObj.put("msg", msg);
             if ("400".equals(stat)) {
             	resObj.put("status", "400");
             	resObj.put("nick", (String) object.get("nick"));
             	resObj.put("characterid", (String) object.get("characterid"));
-            	resObj.put("msg", msg);
             	
-            	return resObj.toJSONString();
-            }
-            
-            if (StringUtils.isNotEmpty(msg)) {
-            	resObj.put("msg", msg);
+            	
             	return resObj.toJSONString();
             }
 
