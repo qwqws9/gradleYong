@@ -27,7 +27,6 @@ public class PuppeteerController extends BaseController {
 
 	private static final String NEOPLE = "https://api.neople.co.kr/df/";
     private static final String API_KEY = "NZsA1lAqj64UpeGK1XQxEfUU3PZUWOmw";
-	
     private static Map<String, String> SERVER;
     
     static {
@@ -43,14 +42,13 @@ public class PuppeteerController extends BaseController {
     }
     
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/puppeteer/{server}/{name}")
+	@RequestMapping("/puppeteer/{server}/{name}/{buf}")
     @ResponseBody
-    public String puppeteer(@PathVariable String server, @PathVariable String name) throws UnsupportedEncodingException {
+    public String puppeteer(@PathVariable String server, @PathVariable String name, @PathVariable String buf) throws UnsupportedEncodingException {
         String neopleServer = "";
         JSONObject resObj = new JSONObject();
         
-        
-        
+
 		if (SERVER.containsKey(server)) {
             neopleServer = SERVER.get(server);
         } else {
@@ -74,6 +72,7 @@ public class PuppeteerController extends BaseController {
         StringBuilder sb = new StringBuilder();
         try {
             URL url = new URL("http://104.196.235.254:9999/");
+//            URL url = new URL("http://localhost:9999/");
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             
             conn.setRequestMethod("POST");
@@ -87,6 +86,7 @@ public class PuppeteerController extends BaseController {
             
             obj.put("nick", name);
             obj.put("characterid", neopleId);
+            obj.put("buf", buf);
 //            data.put("data", obj);
 
             out.write(obj.toString().getBytes("utf-8"));
@@ -103,14 +103,34 @@ public class PuppeteerController extends BaseController {
             
             JSONParser parse = new JSONParser();
             JSONObject object = (JSONObject) parse.parse(sb.toString());
-            String sec25 = (String) object.get("sec25");
-            String sec40 = (String) object.get("sec40");
+            String stat = (String) object.get("status");
+            if ("400".equals(stat)) {
+            	resObj.put("status", "400");
+            	resObj.put("nick", (String) object.get("nick"));
+            	resObj.put("characterid", (String) object.get("characterid"));
+            	resObj.put("msg", (String) object.get("msg"));
+            	
+            	return resObj.toJSONString();
+            }
             
-            sec25 = numberToKorean(sec25);
-            sec40 = numberToKorean(sec40);
-            
-            resObj.put("sec25", "1시 25초 - " + sec25);
-            resObj.put("sec40", "1시 40초 - " + sec40);
+            if (!"N".equals(buf)) {
+            	String bufStat = ((String) object.get("stat")).replaceAll("\n|\t", "").trim();
+            	String dam = ((String) object.get("dam")).replaceAll("\n|\t", "").trim();
+            	String jumsu = ((String) object.get("jumsu")).replaceAll("\n|\t", "").trim();
+            	
+            	resObj.put("bufStat", "스탯 : " + bufStat);
+            	resObj.put("dam", "물/마/독 : " + dam);
+            	resObj.put("jumsu", "버프점수" + jumsu);
+            } else {
+            	String sec25 = (String) object.get("sec25");
+            	String sec40 = (String) object.get("sec40");
+            	
+            	sec25 = numberToKorean(sec25);
+            	sec40 = numberToKorean(sec40);
+            	
+            	resObj.put("sec25", "1시 25초 - " + sec25);
+            	resObj.put("sec40", "1시 40초 - " + sec40);
+            }
             resObj.put("status", "200");
 
         } catch (Exception e) {
@@ -215,5 +235,78 @@ public class PuppeteerController extends BaseController {
         }
         
         return sb.toString();
+    }
+    
+    @SuppressWarnings("unchecked")
+	@RequestMapping("/puppTest")
+    @ResponseBody
+    public String puppTest(@RequestParam String server, @RequestParam String name) throws UnsupportedEncodingException {
+        JSONObject resObj = new JSONObject();
+        
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            URL url = new URL("http://localhost:9999/");
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Accept", "applitcation/json");
+            conn.setRequestProperty("Content-type", "application/json");
+            
+            OutputStream out = conn.getOutputStream();
+            JSONObject obj = new JSONObject();
+            JSONObject data = new JSONObject();
+            
+            obj.put("nick", name);
+            obj.put("characterid", server);
+
+            out.write(obj.toString().getBytes("utf-8"));
+            
+            out.flush();
+            
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            
+            String line;
+            while((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            System.out.println(sb.toString());
+            
+            JSONParser parse = new JSONParser();
+            JSONObject object = (JSONObject) parse.parse(sb.toString());
+            String stat = (String) object.get("status");
+            
+            if ("400".equals(stat)) {
+            	resObj.put("status", "400");
+            	resObj.put("nick", (String) object.get("nick"));
+            	resObj.put("characterid", (String) object.get("characterid"));
+            	resObj.put("msg", (String) object.get("msg"));
+            	
+            	return resObj.toJSONString();
+            }
+            
+            String sec25 = (String) object.get("sec25");
+            String sec40 = (String) object.get("sec40");
+            
+            
+            sec25 = numberToKorean(sec25);
+            sec40 = numberToKorean(sec40);
+            
+            resObj.put("sec25", "1시 25초 - " + sec25);
+            resObj.put("sec40", "1시 40초 - " + sec40);
+            resObj.put("status", "200");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {}
+            }
+        }
+
+        return resObj.toJSONString();
     }
 }
