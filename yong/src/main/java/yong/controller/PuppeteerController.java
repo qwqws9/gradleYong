@@ -128,12 +128,14 @@ public class PuppeteerController extends BaseController {
             } else {
             	String sec25 = (String) object.get("sec25");
             	String sec40 = (String) object.get("sec40");
+            	String rank = (String) object.get("rank");
             	
             	sec25 = numberToKorean(sec25);
             	sec40 = numberToKorean(sec40);
             	
             	resObj.put("sec25", "1시 25초 - " + sec25);
             	resObj.put("sec40", "1시 40초 - " + sec40);
+            	resObj.put("rank", rank);
             }
             resObj.put("status", "200");
             resObj.put("buf", buf);
