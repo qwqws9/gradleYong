@@ -115,7 +115,8 @@ public class PuppeteerController extends BaseController {
             	
             	return resObj.toJSONString();
             }
-
+            buf = (String) object.get("buf");
+            
             if (!"N".equals(buf)) {
             	String bufStat = ((String) object.get("stat")).replaceAll("\n|\t", "").trim();
             	String dam = ((String) object.get("dam")).replaceAll("\n|\t", "").trim();
@@ -135,7 +136,7 @@ public class PuppeteerController extends BaseController {
             	resObj.put("sec40", "1시 40초 - " + sec40);
             }
             resObj.put("status", "200");
-            resObj.put("buf", (String) object.get("buf"));
+            resObj.put("buf", buf);
 
         } catch (Exception e) {
             e.printStackTrace();
