@@ -135,6 +135,7 @@ public class PuppeteerController extends BaseController {
             	resObj.put("sec40", "1시 40초 - " + sec40);
             }
             resObj.put("status", "200");
+            resObj.put("buf", (String) object.get("buf"));
 
         } catch (Exception e) {
             e.printStackTrace();
