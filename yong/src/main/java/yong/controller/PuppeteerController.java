@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -104,15 +105,22 @@ public class PuppeteerController extends BaseController {
             JSONParser parse = new JSONParser();
             JSONObject object = (JSONObject) parse.parse(sb.toString());
             String stat = (String) object.get("status");
+            String msg = (String) object.get("msg");
+            
             if ("400".equals(stat)) {
             	resObj.put("status", "400");
             	resObj.put("nick", (String) object.get("nick"));
             	resObj.put("characterid", (String) object.get("characterid"));
-            	resObj.put("msg", (String) object.get("msg"));
+            	resObj.put("msg", msg);
             	
             	return resObj.toJSONString();
             }
             
+            if (StringUtils.isNotEmpty(msg)) {
+            	resObj.put("msg", msg);
+            	return resObj.toJSONString();
+            }
+
             if (!"N".equals(buf)) {
             	String bufStat = ((String) object.get("stat")).replaceAll("\n|\t", "").trim();
             	String dam = ((String) object.get("dam")).replaceAll("\n|\t", "").trim();
