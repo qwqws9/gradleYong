@@ -142,6 +142,8 @@ public class PuppeteerController extends BaseController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            resObj.put("nick", name);
+            resObj.put("msg", e.toString());
         } finally {
             if (br != null) {
                 try {
