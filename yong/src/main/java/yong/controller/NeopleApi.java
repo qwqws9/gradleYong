@@ -109,6 +109,7 @@ public class NeopleApi extends BaseController {
                     l.setAveragePrice("교환 불가");
                 } else {
                     totalPrice += Integer.parseInt(l.getAveragePrice());
+                    totalAverage += Integer.parseInt(l.getAveragePrice());
                     l.setUnitPrice("경매장에 없는 상품으로 최근판매금액 10개 평균값");
                 }
             } else {
@@ -125,7 +126,7 @@ public class NeopleApi extends BaseController {
             sb.append("*emrms*");
             sb.append(l.getItemName());
             sb.append("*emrms*");
-            if (StringUtils.isNotEmpty(l.getUnitPrice()) && l.getUnitPrice().startsWith("경매장 없는")) {
+            if (StringUtils.isNotEmpty(l.getUnitPrice()) && l.getUnitPrice().startsWith("경매장")) {
                 sb.append(l.getUnitPrice());
             } else {
                 sb.append("경매장 최저가 : ");
@@ -136,7 +137,7 @@ public class NeopleApi extends BaseController {
             sb.append(StringUtils.isNumeric(l.getAveragePrice()) ? format.format(Integer.parseInt(l.getAveragePrice())) + " 골드" : l.getAveragePrice());
             sb.append("*emrms*");
             sb.append("------------------------------");
-            
+            sb.append("*emrms*");
             
         }
         
