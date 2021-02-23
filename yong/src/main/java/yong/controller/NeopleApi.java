@@ -178,17 +178,22 @@ public class NeopleApi extends BaseController {
                 look = new LookDto();
                 JSONObject j = (JSONObject) o;
                 String slotId = (String) j.get("slotId");
+                String itemName = (String) j.get("itemName");
                 // 오라나 무기압타는 제외
                 if ("AURORA".equals(slotId) || "WEAPON".equals(slotId)) { continue; }
                 look.setSlotName((String) j.get("slotName"));
                 look.setItemId((String) j.get("itemId"));
-                look.setItemName((String) j.get("itemName"));
+                look.setItemName(itemName);
 
                 JSONObject j2 = (JSONObject) j.get("clone");
                 if (j2.get("itemId") != null) {
                     // 클론아바타 장착시 원본 아바타 추출
                     look.setItemId((String) j2.get("itemId"));
                     look.setItemName((String) j2.get("itemName"));
+                } else {
+                    if (StringUtils.isNotEmpty(itemName) && itemName.indexOf("클론") > -1) {
+                        continue;
+                    }
                 }
 
                 list.add(look);
