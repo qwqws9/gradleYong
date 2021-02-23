@@ -180,7 +180,7 @@ public class NeopleApi extends BaseController {
                 String slotId = (String) j.get("slotId");
                 String itemName = (String) j.get("itemName");
                 // 오라나 무기압타는 제외
-                if ("AURORA".equals(slotId) || "WEAPON".equals(slotId)) { continue; }
+                if ("AURORA".equals(slotId) || "WEAPON".equals(slotId) || "AURA_SKIN".equals(slotId)) { continue; }
                 look.setSlotName((String) j.get("slotName"));
                 look.setItemId((String) j.get("itemId"));
                 look.setItemName(itemName);
