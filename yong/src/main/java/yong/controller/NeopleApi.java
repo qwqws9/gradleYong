@@ -145,7 +145,7 @@ public class NeopleApi extends BaseController {
             sb.append("▶평균가만 존재하는 경우 (경매장에 등록된 상품이 없으면 최근거래내역 조회 후 N건의 평균값 - 최대 10건)");
             sb.append("*emrms*");
             sb.append("*emrms*");
-            sb.append("▶아바타 가격은 엠블렘을 포함하지 않은 가격이므로 다를수있음");
+            sb.append("▶아바타 이름으로만 경매장 검색해서 최저가를 가져옴 따라서 현재 장착한 엠블렘은 고려하지 않았기에 가격이 다를수있음 (레압의 경우 본인이 구매한 가격과 다를 수 있음)");
             sb.append("*emrms*");
             sb.append("*emrms*");
             sb.append("▶클론아바타, 무기, 오라, 피부스킨 제외");
