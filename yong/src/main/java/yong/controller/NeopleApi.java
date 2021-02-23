@@ -141,9 +141,12 @@ public class NeopleApi extends BaseController {
             sb.append("*emrms*");
             sb.append("▶교환불가란 (찐 교불이거나 경매장에 등록되어 있지 않고 최근거래내역이 없으면 교환불가 처리)");
             sb.append("*emrms*");
-            sb.append("▶평균가만 존재하는 경우 (경매장에 등록된 상품이 없으면 최근거래내역 조회 후 10건의 평균값)");
+            sb.append("*emrms*");
+            sb.append("▶평균가만 존재하는 경우 (경매장에 등록된 상품이 없으면 최근거래내역 조회 후 N건의 평균값 - 최대 10건)");
+            sb.append("*emrms*");
             sb.append("*emrms*");
             sb.append("▶아바타 가격은 엠블렘을 포함하지 않은 가격이므로 다를수있음");
+            sb.append("*emrms*");
             sb.append("*emrms*");
             sb.append("▶클론아바타, 무기, 오라, 피부스킨 제외");
             
